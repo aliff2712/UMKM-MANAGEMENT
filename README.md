@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white" />
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
   <img src="https://img.shields.io/badge/Sanctum-3.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
+ 
 </p>
 
 > Platform manajemen UMKM berbasis Laravel 10 yang memberikan **insight bisnis cerdas** kepada pemilik usaha — mencakup analisis keuangan, stok produk, performa penjualan, laporan berbasis periode, dan AI Chatbot berbasis data real.
@@ -527,12 +527,10 @@ style:    Perubahan format (bukan logic)
 
 ---
 
-## 📄 Lisensi
 
-Proyek ini menggunakan lisensi [MIT](LICENSE).
 
 ---
 
 <p align="center">
-  Dibuat dengan ❤️ untuk UMKM Indonesia — TechneFest 2025
+  A2F PRODUCTION FOR UMKM INDONESIA
 </p>
