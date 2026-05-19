@@ -19,39 +19,8 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // ── 2. Users (1 per role) ────────────────────────────────────
-        DB::table('users')->insert([
-            [
-                'outlet_id'  => $outletId,
-                'name'       => 'Owner Utama',
-                'email'      => 'owner@toko.com',
-                'password'   => Hash::make('password'),
-                'role'       => 'owner',
-                'is_active'  => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'outlet_id'  => $outletId,
-                'name'       => 'Admin Toko',
-                'email'      => 'admin@toko.com',
-                'password'   => Hash::make('password'),
-                'role'       => 'admin',
-                'is_active'  => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'outlet_id'  => $outletId,
-                'name'       => 'Kasir Toko',
-                'email'      => 'kasir@toko.com',
-                'password'   => Hash::make('password'),
-                'role'       => 'kasir',
-                'is_active'  => true,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        // ── 2. Users (via UserSeeder) ─────────────────────────────────
+        $this->call(UserSeeder::class);
 
         // ── 3. Kategori produk ───────────────────────────────────────
         DB::table('categories')->insert([

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ChatbotWebController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\ExpenseWebController;
@@ -20,21 +21,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 // =========================================================
-// HALAMAN PUBLIK
+// HALAMAN PUBLIK / GUEST
 // =========================================================
 
 Route::get('/', fn () => redirect()->route('dashboard'));
 
-// Route Login — dikelola Laravel default (auth scaffold)
-// Jika belum ada, jalankan: php artisan make:auth
-// Atau buat manual LoginController sendiri.
-Route::get('/login', fn () => view('auth.login'))->name('login')->middleware('guest');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 // =========================================================
 // HALAMAN TERPROTEKSI — wajib login (session)
 // =========================================================
 
 Route::middleware(['auth'])->group(function () {
+
+    // === LOGOUT ===
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // === DASHBOARD ===
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
