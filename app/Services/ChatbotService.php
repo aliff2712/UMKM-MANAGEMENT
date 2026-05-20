@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Expense;
+use App\Models\Product;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 /**
@@ -84,6 +86,7 @@ class ChatbotService
     public function ask(string $question, int $outletId): array
     {
         $normalizedQuestion = Str::lower($question);
+        $apiKey = config('services.gemini.key');
 
         // [CORE] Intent matching — cek setiap keyword dalam intentMap
         $matchedIntent  = null;
@@ -97,18 +100,38 @@ class ChatbotService
             }
         }
 
-        // Tidak ada intent yang cocok
-        if (! $matchedHandler || ! method_exists($this, $matchedHandler)) {
+        // 1. Kasus A: Ada intent lokal yang cocok
+        if ($matchedHandler && method_exists($this, $matchedHandler)) {
+            $localResult = $this->{$matchedHandler}($question, $outletId, $matchedIntent);
+
+            // Jika API Key tersedia, percantik jawaban lokal tersebut menggunakan Gemini
+            if ($apiKey) {
+                $beautifiedAnswer = $this->askGeminiToBeautify($localResult['answer'], $question, $apiKey);
+                $localResult['answer'] = $beautifiedAnswer;
+            }
+
+            return $localResult;
+        }
+
+        // 2. Kasus B: Tidak ada intent lokal yang cocok, tetapi API Key Gemini tersedia (Fallback AI Cerdas)
+        if ($apiKey) {
+            $aiAnswer = $this->askGeminiWithContext($question, $outletId, $apiKey);
+
             return [
                 'question' => $question,
-                'answer'   => 'Maaf, saya belum bisa menjawab pertanyaan tersebut. Coba tanyakan tentang: produk terlaris, stok rendah, pengeluaran bulan ini, atau pendapatan.',
+                'answer'   => $aiAnswer,
                 'data'     => [],
-                'intent'   => null,
+                'intent'   => 'ai_fallback',
             ];
         }
 
-        // [CORE] Panggil handler yang sesuai dengan intent
-        return $this->{$matchedHandler}($question, $outletId, $matchedIntent);
+        // 3. Kasus C: Tidak ada intent lokal yang cocok & tidak ada API Key Gemini (Offline / Fallback Default)
+        return [
+            'question' => $question,
+            'answer'   => 'Maaf, saya belum bisa menjawab pertanyaan tersebut. Coba tanyakan tentang: produk terlaris, stok rendah, pengeluaran bulan ini, atau pendapatan.',
+            'data'     => [],
+            'intent'   => null,
+        ];
     }
 
     // =========================================================
@@ -319,5 +342,107 @@ class ChatbotService
             'data'     => $data,
             'intent'   => $intent,
         ];
+    }
+
+    // =========================================================
+    // GEMINI AI INTEGRATION METHODS
+    // =========================================================
+
+    /**
+     * Kirim prompt langsung ke API Google Gemini 1.5 Flash.
+     *
+     * @param  string $prompt Teks instruksi untuk AI
+     * @param  string $apiKey Kunci API Gemini
+     * @return string|null
+     */
+    public function askGemini(string $prompt, string $apiKey): ?string
+    {
+        try {
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
+
+            $response = Http::timeout(8)->post($url, [
+                'contents' => [
+                    [
+                        'parts' => [
+                            ['text' => $prompt]
+                        ]
+                    ]
+                ]
+            ]);
+
+            if ($response->successful()) {
+                return $response->json('candidates.0.content.parts.0.text');
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            // Tangkap exception (misal: koneksi offline, RTO) agar aplikasi aman
+            return null;
+        }
+    }
+
+    /**
+     * Fallback cerdas: Tanya Gemini dengan konteks ringkasan data outlet (RAG).
+     *
+     * @param  string $question Pertanyaan user
+     * @param  int    $outletId ID outlet terkait
+     * @param  string $apiKey Kunci API Gemini
+     * @return string
+     */
+    public function askGeminiWithContext(string $question, int $outletId, string $apiKey): string
+    {
+        // 1. Ambil ringkasan statistik toko dari database
+        $totalProducts = Product::byOutlet($outletId)->count();
+        $lowStockCount = Product::byOutlet($outletId)->lowStock()->count();
+        $monthlyRevenue = Transaction::byOutlet($outletId)
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->sum('total_amount');
+        $monthlyExpenses = Expense::byOutlet($outletId)
+            ->thisMonth()
+            ->sum('amount');
+
+        $monthName = now()->translatedFormat('F Y');
+
+        // 2. Susun System Prompt / Context untuk memberikan intelijen bisnis
+        $prompt = "Anda adalah asisten AI bisnis pintar bernama TechneFest. Anda membantu pemilik toko UMKM menganalisis bisnis mereka berdasarkan ringkasan data outlet real-time berikut ini:
+- Total produk di toko saat ini: {$totalProducts} barang
+- Jumlah produk dengan stok rendah/kritis (perlu restock segera): {$lowStockCount} barang
+- Total omzet/pendapatan kotor bulan berjalan ({$monthName}): Rp " . number_format($monthlyRevenue, 0, ',', '.') . "
+- Total biaya/pengeluaran operasional bulan berjalan ({$monthName}): Rp " . number_format($monthlyExpenses, 0, ',', '.') . "
+
+Pertanyaan Pengguna: \"{$question}\"
+
+Jawablah pertanyaan tersebut secara solutif, ramah, profesional, dan ringkas dalam Bahasa Indonesia. Fokuskan jawaban Anda untuk membantu pemilik bisnis memahami situasi keuangan atau stoknya. Jika ditanya mengenai tips bisnis atau saran operasional berdasarkan data di atas, berikan masukan yang logis dan membangun.";
+
+        // 3. Panggil API Gemini
+        $answer = $this->askGemini($prompt, $apiKey);
+
+        return $answer ?? 'Maaf, saya tidak dapat terhubung ke server kecerdasan buatan saat ini. Silakan coba kembali beberapa saat lagi.';
+    }
+
+    /**
+     * Mempercantik teks jawaban lokal agar lebih alami menggunakan Gemini.
+     *
+     * @param  string $localAnswer Jawaban default dari handler lokal
+     * @param  string $question Pertanyaan user
+     * @param  string $apiKey Kunci API Gemini
+     * @return string
+     */
+    public function askGeminiToBeautify(string $localAnswer, string $question, string $apiKey): string
+    {
+        $prompt = "Anda adalah asisten AI bisnis pintar bernama TechneFest. Tugas Anda adalah mempercantik teks jawaban bisnis agar terdengar lebih luwes, ramah, dan profesional untuk pemilik toko UMKM dalam Bahasa Indonesia.
+
+Pertanyaan dari Pemilik Toko: \"{$question}\"
+Jawaban Data Mentah: \"{$localAnswer}\"
+
+Aturan penting:
+1. Jangan mengubah atau memanipulasi angka, statistik, atau fakta data asli di dalam jawaban mentah.
+2. Buatlah respons yang mengalir secara alami dan berikan sedikit kalimat penyemangat/rekomendasi bisnis singkat yang relevan.
+3. Jawablah langsung ke inti penjelasan dengan santun.";
+
+        $beautifiedAnswer = $this->askGemini($prompt, $apiKey);
+
+        return $beautifiedAnswer ?? $localAnswer;
     }
 }

@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Jalankan perintah backup database ke Telegram otomatis setiap hari pukul 23:00 malam
+        $schedule->command('db:backup-telegram')->dailyAt('23:00');
     }
 
     /**
