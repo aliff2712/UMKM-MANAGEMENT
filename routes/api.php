@@ -96,51 +96,67 @@ Route::prefix('v1')->group(function () {
             ]);
         });
 
-        // === [CORE] INSIGHT ROUTES ===
-        // Engine analitik utama: penjualan, stok, keuangan
-        Route::prefix('insights')->group(function () {
-            Route::get('/', [InsightController::class, 'index']);
-            Route::get('/sales', [InsightController::class, 'sales']);
-            Route::get('/stock', [InsightController::class, 'stock']);
-            Route::get('/financial', [InsightController::class, 'financial']);
+        // =========================================================
+        // HAK AKSES: OWNER ONLY
+        // =========================================================
+        Route::middleware(['role:owner'])->group(function () {
+            // === [CORE] INSIGHT ROUTES ===
+            // Engine analitik utama: penjualan, stok, keuangan
+            Route::prefix('insights')->group(function () {
+                Route::get('/', [InsightController::class, 'index']);
+                Route::get('/sales', [InsightController::class, 'sales']);
+                Route::get('/stock', [InsightController::class, 'stock']);
+                Route::get('/financial', [InsightController::class, 'financial']);
+            });
+
+            // === [CORE] CHATBOT ROUTES ===
+            // Mesin tanya-jawab berbasis data real UMKM
+            Route::prefix('chatbot')->group(function () {
+                Route::get('/questions', [ChatbotController::class, 'questions']); // template card UI
+                Route::post('/ask', [ChatbotController::class, 'ask']);            // kirim pertanyaan
+            });
+
+            // === PROFIT & LOSS REPORT ===
+            Route::get('reports/profit-loss', [ReportController::class, 'profitLoss']); // [CORE] Laba bersih
         });
 
-        // === [CORE] CHATBOT ROUTES ===
-        // Mesin tanya-jawab berbasis data real UMKM
-        Route::prefix('chatbot')->group(function () {
-            Route::get('/questions', [ChatbotController::class, 'questions']); // template card UI
-            Route::post('/ask', [ChatbotController::class, 'ask']);            // kirim pertanyaan
+        // =========================================================
+        // HAK AKSES: OWNER & ADMIN
+        // =========================================================
+        Route::middleware(['role:owner,admin'])->group(function () {
+            // === PRODUCT ROUTES ===
+            // Full resource: CRUD + filter low_stock, category, is_active
+            Route::apiResource('products', ProductController::class);
+
+            // === STOCK MOVEMENT ROUTES ===
+            // Riwayat stok & tambah/kurangi stok manual
+            Route::prefix('stock-movements')->group(function () {
+                Route::get('/', [StockMovementController::class, 'index']);
+                Route::post('/', [StockMovementController::class, 'store']);
+            });
+
+            // === EXPENSE ROUTES ===
+            // Pencatatan pengeluaran operasional + upload nota
+            Route::apiResource('expenses', ExpenseController::class);
+
+            // === OPERATIONAL REPORTS ===
+            Route::prefix('reports')->group(function () {
+                Route::get('/sales', [ReportController::class, 'sales']);
+                Route::get('/expenses', [ReportController::class, 'expenses']);
+            });
         });
 
-        // === [CORE] TRANSACTION ROUTES ===
-        // Transaksi bersifat immutable — hanya index, store, show
-        Route::prefix('transactions')->group(function () {
-            Route::get('/', [TransactionController::class, 'index']);
-            Route::post('/', [TransactionController::class, 'store']);
-            Route::get('/{id}', [TransactionController::class, 'show']);
-        });
-
-        // === PRODUCT ROUTES ===
-        // Full resource: CRUD + filter low_stock, category, is_active
-        Route::apiResource('products', ProductController::class);
-
-        // === STOCK MOVEMENT ROUTES ===
-        // Riwayat stok & tambah/kurangi stok manual
-        Route::prefix('stock-movements')->group(function () {
-            Route::get('/', [StockMovementController::class, 'index']);
-            Route::post('/', [StockMovementController::class, 'store']);
-        });
-
-        // === EXPENSE ROUTES ===
-        // Pencatatan pengeluaran operasional + upload nota
-        Route::apiResource('expenses', ExpenseController::class);
-
-        // === [CORE] REPORT ROUTES ===
-        // Laporan bisnis berbasis periode
-        Route::prefix('reports')->group(function () {
-            Route::get('/sales', [ReportController::class, 'sales']);
-            Route::get('/expenses', [ReportController::class, 'expenses']);
-            Route::get('/profit-loss', [ReportController::class, 'profitLoss']); // [CORE] Laba bersih
+        // =========================================================
+        // HAK AKSES: OWNER, ADMIN, KASIR
+        // =========================================================
+        Route::middleware(['role:owner,admin,kasir'])->group(function () {
+            // === [CORE] TRANSACTION ROUTES ===
+            // Transaksi bersifat immutable — hanya index, store, show
+            Route::prefix('transactions')->group(function () {
+                Route::get('/', [TransactionController::class, 'index']);
+                Route::post('/', [TransactionController::class, 'store']);
+                Route::get('/{id}', [TransactionController::class, 'show']);
+            });
         });
 
     }); // end auth:sanctum

@@ -40,50 +40,67 @@ Route::middleware(['auth'])->group(function () {
     // === LOGOUT ===
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // === DASHBOARD ===
+    // === DASHBOARD (Akses Umum untuk Semua Role Terautentikasi) ===
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // === INSIGHT ROUTES ===
-    Route::prefix('insights')->name('insights.')->group(function () {
-        Route::get('/',          [InsightWebController::class, 'index'])->name('index');
-        Route::get('/sales',     [InsightWebController::class, 'sales'])->name('sales');
-        Route::get('/stock',     [InsightWebController::class, 'stock'])->name('stock');
-        Route::get('/financial', [InsightWebController::class, 'financial'])->name('financial');
+    // =========================================================
+    // HAK AKSES: OWNER ONLY
+    // =========================================================
+    Route::middleware(['role:owner'])->group(function () {
+        // === INSIGHT ROUTES ===
+        Route::prefix('insights')->name('insights.')->group(function () {
+            Route::get('/',          [InsightWebController::class, 'index'])->name('index');
+            Route::get('/sales',     [InsightWebController::class, 'sales'])->name('sales');
+            Route::get('/stock',     [InsightWebController::class, 'stock'])->name('stock');
+            Route::get('/financial', [InsightWebController::class, 'financial'])->name('financial');
+        });
+
+        // === CHATBOT ROUTES ===
+        Route::prefix('chatbot')->name('chatbot.')->group(function () {
+            Route::get('/',     [ChatbotWebController::class, 'index'])->name('index');
+            Route::post('/ask', [ChatbotWebController::class, 'ask'])->name('ask');
+        });
+
+        // === PROFIT & LOSS REPORT ===
+        Route::get('reports/profit-loss', [ReportWebController::class, 'profitLoss'])->name('reports.profit-loss');
     });
 
-    // === CHATBOT ROUTES ===
-    Route::prefix('chatbot')->name('chatbot.')->group(function () {
-        Route::get('/',    [ChatbotWebController::class, 'index'])->name('index');
-        Route::post('/ask', [ChatbotWebController::class, 'ask'])->name('ask');
+    // =========================================================
+    // HAK AKSES: OWNER & ADMIN
+    // =========================================================
+    Route::middleware(['role:owner,admin'])->group(function () {
+        // === PRODUCT ROUTES (full resource) ===
+        Route::resource('products', ProductWebController::class);
+
+        // === STOCK ROUTES ===
+        Route::prefix('stock')->name('stock.')->group(function () {
+            Route::get('/',           [StockWebController::class, 'index'])->name('index');
+            Route::get('/movements',  [StockWebController::class, 'movements'])->name('movements');
+            Route::get('/adjust',     [StockWebController::class, 'adjust'])->name('adjust');
+            Route::post('/movements', [StockWebController::class, 'storeMovement'])->name('movements.store');
+        });
+
+        // === EXPENSE ROUTES (full resource) ===
+        Route::resource('expenses', ExpenseWebController::class);
+
+        // === OPERATIONAL REPORTS ===
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/sales',    [ReportWebController::class, 'sales'])->name('sales');
+            Route::get('/expenses', [ReportWebController::class, 'expenses'])->name('expenses');
+        });
     });
 
-    // === PRODUCT ROUTES (full resource) ===
-    Route::resource('products', ProductWebController::class);
-
-    // === TRANSACTION ROUTES ===
-    Route::prefix('transactions')->name('transactions.')->group(function () {
-        Route::get('/',          [TransactionWebController::class, 'index'])->name('index');
-        Route::get('/create',    [TransactionWebController::class, 'create'])->name('create');
-        Route::post('/',         [TransactionWebController::class, 'store'])->name('store');
-        Route::get('/{id}',      [TransactionWebController::class, 'show'])->name('show');
-    });
-
-    // === STOCK ROUTES ===
-    Route::prefix('stock')->name('stock.')->group(function () {
-        Route::get('/',           [StockWebController::class, 'index'])->name('index');
-        Route::get('/movements',  [StockWebController::class, 'movements'])->name('movements');
-        Route::get('/adjust',     [StockWebController::class, 'adjust'])->name('adjust');
-        Route::post('/movements', [StockWebController::class, 'storeMovement'])->name('movements.store');
-    });
-
-    // === EXPENSE ROUTES (full resource) ===
-    Route::resource('expenses', ExpenseWebController::class);
-
-    // === REPORT ROUTES ===
-    Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/sales',        [ReportWebController::class, 'sales'])->name('sales');
-        Route::get('/expenses',     [ReportWebController::class, 'expenses'])->name('expenses');
-        Route::get('/profit-loss',  [ReportWebController::class, 'profitLoss'])->name('profit-loss');
+    // =========================================================
+    // HAK AKSES: OWNER, ADMIN, KASIR
+    // =========================================================
+    Route::middleware(['role:owner,admin,kasir'])->group(function () {
+        // === TRANSACTION ROUTES ===
+        Route::prefix('transactions')->name('transactions.')->group(function () {
+            Route::get('/',          [TransactionWebController::class, 'index'])->name('index');
+            Route::get('/create',    [TransactionWebController::class, 'create'])->name('create');
+            Route::post('/',         [TransactionWebController::class, 'store'])->name('store');
+            Route::get('/{id}',      [TransactionWebController::class, 'show'])->name('show');
+        });
     });
 
 }); // end auth middleware
