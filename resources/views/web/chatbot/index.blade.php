@@ -29,7 +29,7 @@
                         {{ request('question') }}
                     </div>
                     <div class="chat-bubble bubble-received">
-                        {!! nl2br(e($result)) !!}
+                        {!! nl2br(e($result['answer'])) !!}
                     </div>
                 @endif
             </div>
@@ -37,9 +37,12 @@
             <!-- Suggestion Template Cards -->
             <div class="chat-templates">
                 @foreach($templateQuestions as $q)
-                    <button class="template-card" onclick="askQuestion('{{ $q }}')">
-                        <strong>Tanya:</strong><br>
-                        {{ $q }}
+                    <button class="template-card" onclick="askQuestion('{{ addslashes($q['question']) }}')">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <i data-lucide="{{ $q['icon'] ?? 'help-circle' }}" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                            <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7;">{{ $q['category'] ?? 'Analisis' }}</span>
+                        </div>
+                        <p style="margin: 0; text-align: left; font-size: 0.85rem; line-height: 1.3;">{{ $q['question'] }}</p>
                     </button>
                 @endforeach
             </div>
@@ -125,7 +128,7 @@
                 botBubble.className = 'chat-bubble bubble-received';
                 
                 // Format response text with line breaks
-                const formattedText = res.data.replace(/\n/g, '<br>');
+                const formattedText = res.data.answer.replace(/\n/g, '<br>');
                 botBubble.innerHTML = formattedText;
                 
                 chatMessages.appendChild(botBubble);
