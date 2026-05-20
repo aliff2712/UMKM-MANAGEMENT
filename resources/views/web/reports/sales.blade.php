@@ -4,17 +4,16 @@
 @section('page_title', 'Laporan Kinerja Penjualan')
 
 @section('content')
-    <!-- Filter Date Period Form -->
     <div class="glass-card mb-6">
         <form action="{{ route('reports.sales') }}" method="GET" class="flex-between grid-2" style="align-items: flex-end;">
             <div style="display: flex; gap: 16px; flex: 1;">
                 <div class="form-group" style="margin-bottom: 0; flex: 1;">
                     <label class="form-label" for="start_date">Dari Tanggal</label>
-                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $startDate }}">
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $startDate ?? date('Y-m-d') }}">
                 </div>
                 <div class="form-group" style="margin-bottom: 0; flex: 1;">
                     <label class="form-label" for="end_date">Sampai Tanggal</label>
-                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $endDate }}">
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $endDate ?? date('Y-m-d') }}">
                 </div>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -27,7 +26,6 @@
         </form>
     </div>
 
-    <!-- Summary Performance KPI Grid -->
     <div class="stat-grid">
         <div class="glass-card stat-card cyan">
             <div class="stat-card-label">Total Omzet Penjualan</div>
@@ -48,21 +46,14 @@
         </div>
     </div>
 
-    <!-- Detail Reports Analysis Grid -->
     <div class="grid-2">
-        <!-- Product Sales Performance List -->
         <div class="glass-card">
             <div class="glass-card-header">
-                <h3 class="glass-card-title text-primary">
-                    <i data-lucide="box"></i>
-                    <span>Kinerja Kontribusi Produk</span>
-                </h3>
-                <span class="badge badge-info">Volume Tertinggi</span>
+                <h3 class="glass-card-title text-primary"><i data-lucide="box"></i> <span>Kinerja Kontribusi Produk</span></h3>
             </div>
 
             @if(empty($productSales) || count($productSales) == 0)
                 <div style="text-align: center; padding: 32px; color: var(--text-muted);">
-                    <i data-lucide="package-search" style="width: 48px; height: 48px; margin-bottom: 12px;"></i>
                     <p>Tidak ada kontribusi produk tercatat pada periode ini.</p>
                 </div>
             @else
@@ -71,28 +62,28 @@
                         <thead>
                             <tr>
                                 <th>Nama Produk</th>
-                                <th class="text-right">Qty Terjual</th>
+                                <th class="text-right">Qty</th>
                                 <th class="text-right">Kontribusi Omzet</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $grandTotalSales = $summary['total_sales'] ?: 1;
-                            @endphp
+                            @php $grandTotalSales = ($summary['total_sales'] ?? 1) ?: 1; @endphp
                             @foreach($productSales as $ps)
-                                @php
-                                    $itemContribution = ($ps->total_sales / $grandTotalSales) * 100;
+                                @php 
+                                    // Mengambil nilai secara aman
+                                    $sales = $ps->total_sales ?? 0;
+                                    $qty = $ps->total_qty ?? 0;
+                                    $itemContribution = ($sales / $grandTotalSales) * 100;
                                 @endphp
                                 <tr>
-                                    <td><strong>{{ $ps->name }}</strong></td>
-                                    <td class="text-right"><strong>{{ $ps->total_qty }}</strong> <small>{{ $ps->unit }}</small></td>
+                                    <td><strong>{{ $ps->name ?? 'Produk Tidak Dikenal' }}</strong></td>
+                                    <td class="text-right"><strong>{{ $qty }}</strong></td>
                                     <td class="text-right">
                                         <div style="text-align: right; margin-bottom: 4px;">
-                                            <strong class="text-cyan">Rp {{ number_format($ps->total_sales, 0, ',', '.') }}</strong>
+                                            <strong class="text-cyan">Rp {{ number_format($sales, 0, ',', '.') }}</strong>
                                             <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 4px;">({{ number_format($itemContribution, 1) }}%)</span>
                                         </div>
-                                        <!-- progress bar -->
-                                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
+                                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px;">
                                             <div style="width: {{ $itemContribution }}%; height: 100%; background: var(--cyan); border-radius: 99px;"></div>
                                         </div>
                                     </td>
@@ -104,18 +95,13 @@
             @endif
         </div>
 
-        <!-- Payment Method Performance list -->
         <div class="glass-card">
             <div class="glass-card-header">
-                <h3 class="glass-card-title text-success">
-                    <i data-lucide="credit-card"></i>
-                    <span>Analisis Metode Pembayaran</span>
-                </h3>
+                <h3 class="glass-card-title text-success"><i data-lucide="credit-card"></i> <span>Analisis Metode Pembayaran</span></h3>
             </div>
 
             @if(empty($byPayment) || count($byPayment) == 0)
                 <div style="text-align: center; padding: 32px; color: var(--text-muted);">
-                    <i data-lucide="credit-card" style="width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
                     <p>Belum ada data pembayaran terdeteksi.</p>
                 </div>
             @else
@@ -124,25 +110,17 @@
                         <thead>
                             <tr>
                                 <th>Metode Bayar</th>
-                                <th class="text-right">Jumlah Order</th>
-                                <th class="text-right">Total Transaksi</th>
+                                <th class="text-right">Struk</th>
+                                <th class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($byPayment as $method => $data)
                                 <tr>
-                                    <td>
-                                        @if($method === 'cash')
-                                            <span class="badge badge-success">TUNAI (CASH)</span>
-                                        @elseif($method === 'transfer')
-                                            <span class="badge badge-info">TRANSFER BANK</span>
-                                        @else
-                                            <span class="badge badge-warning">QRIS</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-right"><strong>{{ $data['count'] }}</strong> struk</td>
+                                    <td><span class="badge">{{ strtoupper($method) }}</span></td>
+                                    <td class="text-right"><strong>{{ $data['count'] ?? 0 }}</strong></td>
                                     <td class="text-right text-success font-bold">
-                                        Rp {{ number_format($data['amount'], 0, ',', '.') }}
+                                        Rp {{ number_format($data['amount'] ?? 0, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @endforeach
