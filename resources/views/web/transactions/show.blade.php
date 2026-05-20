@@ -58,8 +58,8 @@
                 <div class="receipt-item-row">
                     <div style="font-weight: bold;">{{ $item->product->name ?? 'Produk' }}</div>
                     <div class="receipt-item-desc">
-                        <span>{{ $item->qty }} x Rp {{ number_format($item->price, 0, ',', '.') }}</span>
-                        <span>Rp {{ number_format($item->price * $item->qty, 0, ',', '.') }}</span>
+                        <span>{{ $item->qty }} x Rp {{ number_format($item->unit_price, 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
                     </div>
                 </div>
             @endforeach
@@ -70,7 +70,7 @@
         <!-- Calculations -->
         <div style="font-size: 0.8rem;">
             @php
-                $subtotal = $transaction->items->reduce(fn($sum, $item) => $sum + ($item->price * $item->qty), 0);
+                $subtotal = $transaction->items->reduce(fn($sum, $item) => $sum + $item->subtotal, 0);
             @endphp
             <div class="receipt-row">
                 <span>Subtotal:</span>
