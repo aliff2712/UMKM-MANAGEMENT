@@ -32,6 +32,21 @@ class ChatbotService
      * @var array<string, string>
      */
     protected array $intentMap = [
+        // Sapaan / greeting
+        'halo'               => 'handleGreeting',
+        'hai'                => 'handleGreeting',
+        'hi'                 => 'handleGreeting',
+        'hello'              => 'handleGreeting',
+        'selamat pagi'       => 'handleGreeting',
+        'selamat siang'      => 'handleGreeting',
+        'selamat sore'       => 'handleGreeting',
+        'apa kabar'          => 'handleGreeting',
+        'siapa kamu'         => 'handleGreeting',
+        'kamu siapa'         => 'handleGreeting',
+        'bantuan'            => 'handleGreeting',
+        'bantu'              => 'handleGreeting',
+        'help'               => 'handleGreeting',
+
         // Penurunan & performa produk
         'penurunan'          => 'handleDecliningProducts',
         'menurun'            => 'handleDecliningProducts',
@@ -182,6 +197,32 @@ class ChatbotService
     // =========================================================
     // INTENT HANDLERS — dipanggil secara dinamis dari ask()
     // =========================================================
+
+    /**
+     * [CORE] Handler: Sapaan / greeting dari user
+     */
+    protected function handleGreeting(string $question, int $outletId, string $intent): array
+    {
+        $jam = (int) now()->format('H');
+        if ($jam >= 5 && $jam < 12) {
+            $waktu = 'pagi';
+        } elseif ($jam >= 12 && $jam < 15) {
+            $waktu = 'siang';
+        } elseif ($jam >= 15 && $jam < 18) {
+            $waktu = 'sore';
+        } else {
+            $waktu = 'malam';
+        }
+
+        $answer = "Halo! Selamat {$waktu}! 👋 Saya adalah asisten bisnis TechneFest. Saya siap membantu Anda menganalisis data outlet secara real-time.\n\nBerikut hal yang bisa saya bantu:\n• 📦 Produk terlaris atau mengalami penurunan\n• ⚠️ Stok produk yang menipis atau habis\n• 💰 Total pendapatan & pengeluaran bulan ini\n• 📊 Analisis untung/rugi usaha Anda\n\nSilakan tanyakan sesuatu atau klik kartu pertanyaan di bawah!";
+
+        return [
+            'question' => $question,
+            'answer'   => $answer,
+            'data'     => [],
+            'intent'   => $intent,
+        ];
+    }
 
     /**
      * [CORE] Handler: Produk mengalami penurunan penjualan
@@ -358,7 +399,7 @@ class ChatbotService
     public function askGemini(string $prompt, string $apiKey): ?string
     {
         try {
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $apiKey;
 
             $response = Http::timeout(8)->post($url, [
                 'contents' => [
@@ -372,6 +413,12 @@ class ChatbotService
 
             if ($response->successful()) {
                 return $response->json('candidates.0.content.parts.0.text');
+            }
+
+            // [CORE] Tangani error spesifik
+            if ($response->status() === 429) {
+                // Quota habis — kembalikan string khusus agar caller bisa bedakan
+                return '__QUOTA_EXCEEDED__';
             }
 
             return null;
@@ -418,7 +465,11 @@ Jawablah pertanyaan tersebut secara solutif, ramah, profesional, dan ringkas dal
         // 3. Panggil API Gemini
         $answer = $this->askGemini($prompt, $apiKey);
 
-        return $answer ?? 'Maaf, saya tidak dapat terhubung ke server kecerdasan buatan saat ini. Silakan coba kembali beberapa saat lagi.';
+        if ($answer === '__QUOTA_EXCEEDED__') {
+            return 'Maaf, kuota Gemini API sedang habis untuk hari ini. Namun Anda tetap bisa menanyakan data bisnis spesifik seperti: produk terlaris, stok rendah, pengeluaran, pendapatan, atau untung/rugi bulan ini.';
+        }
+
+        return $answer ?? 'Maaf, saya tidak dapat terhubung ke server kecerdasan buatan saat ini. Cek koneksi internet atau coba beberapa saat lagi.';
     }
 
     /**
@@ -443,6 +494,11 @@ Aturan penting:
 
         $beautifiedAnswer = $this->askGemini($prompt, $apiKey);
 
-        return $beautifiedAnswer ?? $localAnswer;
+        // Jika quota habis atau gagal, kembalikan jawaban lokal apa adanya
+        if ($beautifiedAnswer === null || $beautifiedAnswer === '__QUOTA_EXCEEDED__') {
+            return $localAnswer;
+        }
+
+        return $beautifiedAnswer;
     }
 }

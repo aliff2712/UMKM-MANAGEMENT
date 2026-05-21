@@ -41,5 +41,39 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Transportasi', 'description' => 'Biaya transportasi',       'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Lainnya',      'description' => 'Pengeluaran lain-lain',    'created_at' => now(), 'updated_at' => now()],
         ]);
+
+             // ── 5. Produk Dummy (Sinkron dengan Model Product BE & FE) ───
+        DB::table('products')->insert([
+
+            // Kategori: Snack
+            [
+                'outlet_id'      => $outletId,
+                'category_id'    => 1,
+                'name'           => 'Kentang Goreng Krispi',
+                'sku'            => 'SNK-KGR',
+                'unit'           => 'porsi',
+                'purchase_price' => 6000.00,
+                'selling_price'  => 12000.00,
+                'stock_qty'      => 30,
+                'stock_minimum'  => 5,
+                'is_active'      => true,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ],
+            [
+                'outlet_id'      => $outletId,
+                'category_id'    => 1,
+                'name'           => 'Cireng Bumbu Rujak',
+                'sku'            => 'SNK-CBR',
+                'unit'           => 'porsi',
+                'purchase_price' => 5000.00,
+                'selling_price'  => 10000.00,
+                'stock_qty'      => 2, // Memicu status stok tipis
+                'stock_minimum'  => 5,
+                'is_active'      => true,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ],
+        ]);
     }
 }
