@@ -22,6 +22,7 @@ class Product extends Model
         'stock_qty',
         'stock_minimum',
         'is_active',
+        'image_path',
     ];
 
     protected $casts = [
@@ -110,5 +111,14 @@ class Product extends Model
             return 0;
         }
         return round((($this->selling_price - $this->purchase_price) / $this->purchase_price) * 100, 2);
+    }
+
+    /**
+     * Accessor untuk URL gambar produk.
+     * Jika tidak ada gambar, mengembalikan placeholder.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        return $this->image_path ? asset('storage/' . $this->image_path) : asset('images/placeholder.png');
     }
 }

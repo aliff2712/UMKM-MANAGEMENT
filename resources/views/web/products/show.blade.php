@@ -9,10 +9,13 @@
         <!-- Specs Info -->
         <div class="glass-card">
             <div class="glass-card-header">
-                <h3 class="glass-card-title text-cyan">
-                    <i data-lucide="info"></i>
-                    <span>Informasi Detail Produk</span>
-                </h3>
+<div class="mb-4">
+    @if($product->image_path)
+        <img src="{{ $product->image_url }}" alt="Produk Image" class="img-thumbnail" style="max-width:300px;">
+    @else
+        <p class="text-muted">Tidak ada gambar produk.</p>
+    @endif
+</div>
                 <div style="display: flex; gap: 8px;">
                     <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm">
                         <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>

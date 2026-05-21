@@ -29,6 +29,7 @@ class ReportService
             ->get();
 
         $totalRevenue    = $transactions->sum('total_amount');
+        $totalSales      = $totalRevenue; // Alias for total_sales used in contribution calculations
         $totalDiscount   = $transactions->sum('discount_amount');
         $totalTransactions = $transactions->count();
         $averageTransaction = $totalTransactions > 0 ? round($totalRevenue / $totalTransactions, 2) : 0;
@@ -36,7 +37,7 @@ class ReportService
         // Rekap per metode pembayaran
         $byPaymentMethod = $transactions->groupBy('payment_method')->map(fn ($group) => [
             'count'  => $group->count(),
-            'total'  => $group->sum('total_amount'),
+            'amount' => $group->sum('total_amount'),
         ]);
 
         // Rekap penjualan per produk dalam periode
@@ -45,7 +46,7 @@ class ReportService
                 'products.name',
                 'products.sku',
                 DB::raw('SUM(transaction_items.qty) as total_qty'),
-                DB::raw('SUM(transaction_items.subtotal) as total_revenue'),
+                DB::raw('SUM(transaction_items.subtotal) as total_sales'),
                 DB::raw('SUM((transaction_items.unit_price - transaction_items.purchase_price) * transaction_items.qty) as gross_margin')
             )
             ->join('products', 'products.id', '=', 'transaction_items.product_id')
@@ -53,7 +54,7 @@ class ReportService
             ->where('transactions.outlet_id', $outletId)
             ->whereBetween('transactions.created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->groupBy('transaction_items.product_id', 'products.name', 'products.sku')
-            ->orderByDesc('total_revenue')
+            ->orderByDesc('total_sales')
             ->get();
 
         // Revenue per hari
@@ -68,6 +69,7 @@ class ReportService
             'period'              => ['start' => $startDate, 'end' => $endDate],
             'summary'             => [
                 'total_revenue'       => $totalRevenue,
+                'total_sales'         => $totalSales,
                 'total_discount'      => $totalDiscount,
                 'total_transactions'  => $totalTransactions,
                 'average_transaction' => $averageTransaction,

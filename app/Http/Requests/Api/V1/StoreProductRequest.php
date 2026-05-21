@@ -25,7 +25,7 @@ class StoreProductRequest extends FormRequest
             'selling_price'  => ['required', 'numeric', 'min:0'],
             'stock_qty'      => ['required', 'integer', 'min:0'],
             'stock_minimum'  => ['required', 'integer', 'min:0'],
-            'is_active'      => ['boolean'],
+            'image' => ['nullable', 'image', 'max:2048', 'dimensions:max_width=1920,max_height=1920'],
         ];
     }
 }

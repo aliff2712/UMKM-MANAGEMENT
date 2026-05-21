@@ -13,7 +13,7 @@
             <a href="{{ route('products.index') }}" class="btn btn-secondary btn-sm">Batal</a>
         </div>
 
-        <form action="{{ route('products.store') }}" method="POST" class="mt-4">
+        <form action="{{ route('products.store') }}" method="POST" class="mt-4" enctype="multipart/form-data">>
             @csrf
             
             <!-- Hidden Outlet ID -->

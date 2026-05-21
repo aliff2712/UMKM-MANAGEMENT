@@ -67,12 +67,18 @@ class ProductWebController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('product_images', 'public');
+            $data['image_path'] = $path;
+        }
+        $product = Product::create($data);
 
         return redirect()
             ->route('products.show', $product->id)
             ->with('success', "Produk \"{$product->name}\" berhasil ditambahkan.");
     }
+
 
     /**
      * GET /products/{id}
@@ -107,7 +113,12 @@ class ProductWebController extends Controller
     public function update(StoreProductRequest $request, int $id)
     {
         $product = Product::findOrFail($id);
-        $product->update($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('product_images', 'public');
+            $data['image_path'] = $path;
+        }
+        $product->update($data);
 
         return redirect()
             ->route('products.show', $product->id)

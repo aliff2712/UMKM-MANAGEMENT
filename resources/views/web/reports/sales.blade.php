@@ -29,7 +29,7 @@
     <div class="stat-grid">
         <div class="glass-card stat-card cyan">
             <div class="stat-card-label">Total Omzet Penjualan</div>
-            <div class="stat-card-value text-cyan">Rp {{ number_format($summary['total_sales'] ?? 0, 0, ',', '.') }}</div>
+            <div class="stat-card-value text-cyan">Rp {{ number_format($summary['total_revenue'] ?? 0, 0, ',', '.') }}</div>
             <div class="stat-card-desc">Total omzet kotor penjualan</div>
         </div>
 

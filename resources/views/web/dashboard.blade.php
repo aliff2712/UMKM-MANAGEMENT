@@ -377,33 +377,32 @@
 <script>
 
     // =========================
-    // TOP PRODUCTS DATA
+    // SALES TREND DATA (7 hari)
     // =========================
-    const topProductsLabels = [
-        @foreach($topProducts as $p)
-            "{{ $p->name }}",
+    const salesTrendLabels = [
+        @foreach($dailyRevenue as $day)
+            "{{ $day['date'] }}",
         @endforeach
     ];
 
-    const topProductsSales = [
-        @foreach($topProducts as $p)
-            {{ $p->total_qty }},
+    const salesTrendData = [
+        @foreach($dailyRevenue as $day)
+            {{ $day['total'] }},
         @endforeach
     ];
 
-
     // =========================
-    // LOW STOCK DATA
+    // PAYMENT METHOD DATA (Pie Chart)
     // =========================
-    const lowStockLabels = [
-        @foreach($lowStockProducts as $product)
-            "{{ $product->name }}",
+    const paymentLabels = [
+        @foreach($byPayment as $method => $data)
+            "{{ strtoupper($method) }}",
         @endforeach
     ];
 
-    const lowStockData = [
-        @foreach($lowStockProducts as $product)
-            {{ $product->stock_qty }},
+    const paymentData = [
+        @foreach($byPayment as $method => $data)
+            {{ $data['amount'] ?? 0 }},
         @endforeach
     ];
 
@@ -419,13 +418,13 @@
 
         data: {
 
-            labels: topProductsLabels,
+            labels: salesTrendLabels,
 
             datasets: [{
 
                 label: 'Produk Terjual',
 
-                data: topProductsSales,
+                data: salesTrendData,
 
                 backgroundColor: [
                     '#06b6d4',
@@ -505,11 +504,11 @@
 
         data: {
 
-            labels: lowStockLabels,
+            labels: paymentLabels,
 
             datasets: [{
 
-                data: lowStockData,
+                data: paymentData,
 
                 backgroundColor: [
                     '#ef4444',

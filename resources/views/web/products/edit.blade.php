@@ -13,12 +13,21 @@
             <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary btn-sm">Batal</a>
         </div>
 
-        <form action="{{ route('products.update', $product->id) }}" method="POST" class="mt-4">
+        <form action="{{ route('products.update', $product->id) }}" method="POST" class="mt-4" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
             <!-- Hidden Outlet ID -->
             <input type="hidden" name="outlet_id" value="{{ $product->outlet_id }}">
+@if($product->image_path)
+    <div class="mb-4">
+        <img src="{{ $product->image_url }}" alt="Produk Image" class="img-thumbnail" style="max-width:200px;">
+    </div>
+@endif
+<div class="form-group">
+    <label class="form-label" for="image">Gambar Produk (Opsional)</label>
+    <input type="file" name="image" id="image" class="form-control" accept="image/*">
+</div>
 
             <div class="form-grid">
                 <!-- Left Column -->

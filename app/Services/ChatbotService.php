@@ -14,6 +14,24 @@ use Illuminate\Support\Str;
  */
 class ChatbotService
 {
+    /**
+     * [CORE] Daftar model Gemini yang dicoba secara berurutan (fallback chain).
+     * Urutan: dari yang paling hemat quota → ke yang lebih powerful.
+     * Update daftar ini jika Google merilis/mempensiunkan model baru.
+     *
+     * Status per Mei 2026:
+     *  - gemini-2.0-flash      → RETIRED (pensiun 3 Maret 2026), JANGAN dipakai
+     *  - gemini-1.5-flash      → DEPRECATED, JANGAN dipakai
+     *  - gemini-2.5-flash-lite → AKTIF, free tier 15 RPM / 1.000 RPD ✅
+     *  - gemini-2.5-flash      → AKTIF, free tier 10 RPM / 250 RPD ✅
+     *
+     * @var array<int, string>
+     */
+    protected array $geminiModels = [
+        'gemini-2.5-flash-lite', // Prioritas utama: quota paling besar di free tier
+        'gemini-2.5-flash',      // Fallback: lebih powerful, quota lebih kecil
+    ];
+
     public function __construct(
         protected InsightService $insightService
     ) {}
@@ -390,7 +408,16 @@ class ChatbotService
     // =========================================================
 
     /**
-     * Kirim prompt langsung ke API Google Gemini 1.5 Flash.
+     * [CORE] Kirim prompt ke Gemini API dengan fallback otomatis antar model.
+     *
+     * Mencoba model satu per satu sesuai urutan $geminiModels:
+     *  - Sukses       → langsung kembalikan teks jawaban
+     *  - 429 (quota)  → coba model berikutnya
+     *  - Error lain   → hentikan, kembalikan null
+     *
+     * Return values khusus:
+     *  - '__QUOTA_EXCEEDED__' → semua model kehabisan quota
+     *  - null                 → error teknis (timeout, koneksi, dsb)
      *
      * @param  string $prompt Teks instruksi untuk AI
      * @param  string $apiKey Kunci API Gemini
@@ -398,34 +425,48 @@ class ChatbotService
      */
     public function askGemini(string $prompt, string $apiKey): ?string
     {
-        try {
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $apiKey;
+        $lastStatus = null;
 
-            $response = Http::timeout(8)->post($url, [
-                'contents' => [
-                    [
-                        'parts' => [
-                            ['text' => $prompt]
+        foreach ($this->geminiModels as $model) {
+            try {
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
+
+                $response = Http::timeout(8)->post($url, [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
                         ]
                     ]
-                ]
-            ]);
+                ]);
 
-            if ($response->successful()) {
-                return $response->json('candidates.0.content.parts.0.text');
+                if ($response->successful()) {
+                    return $response->json('candidates.0.content.parts.0.text');
+                }
+
+                $lastStatus = $response->status();
+
+                if ($lastStatus === 429) {
+                    // Quota model ini habis — coba model berikutnya
+                    continue;
+                }
+
+                // Error selain 429 (misalnya 400, 403, 500) — tidak perlu retry
+                return null;
+
+            } catch (\Exception $e) {
+                // Exception jaringan (timeout, DNS gagal, dsb) — hentikan loop
+                return null;
             }
-
-            // [CORE] Tangani error spesifik
-            if ($response->status() === 429) {
-                // Quota habis — kembalikan string khusus agar caller bisa bedakan
-                return '__QUOTA_EXCEEDED__';
-            }
-
-            return null;
-        } catch (\Exception $e) {
-            // Tangkap exception (misal: koneksi offline, RTO) agar aplikasi aman
-            return null;
         }
+
+        // Semua model sudah dicoba, semuanya 429
+        if ($lastStatus === 429) {
+            return '__QUOTA_EXCEEDED__';
+        }
+
+        return null;
     }
 
     /**
@@ -439,9 +480,9 @@ class ChatbotService
     public function askGeminiWithContext(string $question, int $outletId, string $apiKey): string
     {
         // 1. Ambil ringkasan statistik toko dari database
-        $totalProducts = Product::byOutlet($outletId)->count();
-        $lowStockCount = Product::byOutlet($outletId)->lowStock()->count();
-        $monthlyRevenue = Transaction::byOutlet($outletId)
+        $totalProducts   = Product::byOutlet($outletId)->count();
+        $lowStockCount   = Product::byOutlet($outletId)->lowStock()->count();
+        $monthlyRevenue  = Transaction::byOutlet($outletId)
             ->whereYear('created_at', now()->year)
             ->whereMonth('created_at', now()->month)
             ->sum('total_amount');
@@ -462,7 +503,7 @@ Pertanyaan Pengguna: \"{$question}\"
 
 Jawablah pertanyaan tersebut secara solutif, ramah, profesional, dan ringkas dalam Bahasa Indonesia. Fokuskan jawaban Anda untuk membantu pemilik bisnis memahami situasi keuangan atau stoknya. Jika ditanya mengenai tips bisnis atau saran operasional berdasarkan data di atas, berikan masukan yang logis dan membangun.";
 
-        // 3. Panggil API Gemini
+        // 3. Panggil Gemini dengan fallback otomatis
         $answer = $this->askGemini($prompt, $apiKey);
 
         if ($answer === '__QUOTA_EXCEEDED__') {

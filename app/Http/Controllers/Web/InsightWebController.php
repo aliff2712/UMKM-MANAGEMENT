@@ -6,29 +6,54 @@ use App\Http\Controllers\Controller;
 use App\Services\InsightService;
 use Illuminate\Http\Request;
 
-/**
- * InsightWebController — halaman insight bisnis untuk Blade templates.
- * Menggunakan InsightService yang sama dengan API, hanya return-nya view().
- */
 class InsightWebController extends Controller
 {
     public function __construct(
         protected InsightService $insightService
     ) {}
 
+    // ── Helper: normalisasi topProducts ──────────────────────────
+    // Service return: total_sold, total_revenue
+    // Blade expects:  total_qty,  total_sales
+    private function normalizeTopProducts($products)
+    {
+        return collect($products)->map(function ($p) {
+            $p->total_qty   = $p->total_sold;
+            $p->total_sales = $p->total_revenue;
+            return $p;
+        });
+    }
+
+    // ── Helper: normalisasi decliningProducts ─────────────────────
+    // Service return: current_qty, last_qty, decline_percent
+    // Blade expects:  current_sales, prev_sales, drop_percentage
+    private function normalizeDecliningProducts($products)
+    {
+        return collect($products)->map(fn($dp) => [
+            'name'            => $dp['name'],
+            'current_sales'   => $dp['current_qty'],
+            'prev_sales'      => $dp['last_qty'],
+            'drop_percentage' => $dp['decline_percent'],
+        ]);
+    }
+
     /**
      * GET /insights
-     * Halaman ringkasan semua insight outlet.
      */
     public function index(Request $request)
     {
         $outletId = auth()->user()->outlet_id;
         $period   = $request->get('period', now()->format('Y-m'));
 
-        $stockInsight      = $this->insightService->generateStockInsight($outletId);
-        $financialInsight  = $this->insightService->generateFinancialInsight($outletId, $period);
-        $topProducts       = $this->insightService->getTopSellingProducts($outletId, 5);
-        $decliningProducts = $this->insightService->getDecliningProducts($outletId);
+        $stockInsight     = $this->insightService->generateStockInsight($outletId);
+        $financialInsight = $this->insightService->generateFinancialInsight($outletId, $period);
+
+        $topProducts       = $this->normalizeTopProducts(
+            $this->insightService->getTopSellingProducts($outletId, 5)
+        );
+        $decliningProducts = $this->normalizeDecliningProducts(
+            $this->insightService->getDecliningProducts($outletId)
+        );
 
         return view('web.insights.index', compact(
             'period',
@@ -41,16 +66,16 @@ class InsightWebController extends Controller
 
     /**
      * GET /insights/sales
-     * Halaman insight penjualan: produk terlaris & produk menurun.
      */
     public function sales(Request $request)
     {
         $outletId = auth()->user()->outlet_id;
         $period   = $request->get('period', now()->format('Y-m'));
 
-        $salesInsight      = $this->insightService->generateSalesInsight($outletId, $period);
-        $topProducts       = $salesInsight['top_products'];
-        $decliningProducts = $salesInsight['declining_products'];
+        $salesInsight = $this->insightService->generateSalesInsight($outletId, $period);
+
+        $topProducts       = $this->normalizeTopProducts($salesInsight['top_products']);
+        $decliningProducts = $this->normalizeDecliningProducts($salesInsight['declining_products']);
 
         return view('web.insights.sales', compact(
             'period',
@@ -61,14 +86,12 @@ class InsightWebController extends Controller
 
     /**
      * GET /insights/stock
-     * Halaman insight stok: produk di bawah minimum.
      */
     public function stock()
     {
         $outletId     = auth()->user()->outlet_id;
         $stockInsight = $this->insightService->generateStockInsight($outletId);
 
-        // Pisah critical (stok = 0) dan warning (stok < minimum)
         $criticalProducts = collect($stockInsight['critical']);
         $warningProducts  = collect($stockInsight['warning']);
         $totalLowStock    = $stockInsight['total_low_stock'];
@@ -82,7 +105,6 @@ class InsightWebController extends Controller
 
     /**
      * GET /insights/financial
-     * Halaman insight keuangan: profit/loss, cashflow ratio.
      */
     public function financial(Request $request)
     {
@@ -90,12 +112,11 @@ class InsightWebController extends Controller
         $period           = $request->get('period', now()->format('Y-m'));
         $financialInsight = $this->insightService->generateFinancialInsight($outletId, $period);
 
-        // Ekstrak key agar lebih mudah dipakai di Blade
         $totalRevenue  = $financialInsight['total_revenue'];
         $totalExpenses = $financialInsight['total_expenses'];
         $netProfit     = $financialInsight['net_profit'];
         $profitMargin  = $financialInsight['profit_margin'];
-        $status        = $financialInsight['status']; // 'profit' atau 'loss'
+        $status        = $financialInsight['status'];
 
         return view('web.insights.financial', compact(
             'period',
