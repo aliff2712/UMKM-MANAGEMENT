@@ -4,6 +4,7 @@
 @section('page_title', 'Point of Sale (POS) Kasir')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/pos.css') }}">
 <div class="pos-container">
 
     <div class="pos-catalog-section">
@@ -154,6 +155,72 @@
         </form>
     </div>
 
+</div>
+
+{{-- ======== QRIS PAYMENT MODAL ======== --}}
+<div id="qris-modal" class="qris-modal-overlay" style="display:none;" onclick="closeQrisModal(event)">
+    <div class="qris-modal-card" id="qris-modal-card">
+
+        <div class="qris-modal-header">
+            <div class="qris-header-left">
+                <span class="qris-badge-pill">QRIS</span>
+                <span class="qris-header-sub">Pembayaran Digital</span>
+            </div>
+            <button type="button" class="qris-close-btn" onclick="cancelQrisPayment()">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+
+        <div class="qris-modal-body">
+            <div class="qris-amount-card">
+                <div>
+                    <div class="qris-amount-label">Total Pembayaran</div>
+                    <div class="qris-amount-value" id="qris-total-display">Rp 0</div>
+                </div>
+                <div class="qris-waiting-badge">
+                    <span class="qris-dot-pulse"></span>
+                    <span>Menunggu</span>
+                </div>
+            </div>
+
+            <div class="qris-qr-frame">
+                <span class="qris-corner qris-c-tl"></span>
+                <span class="qris-corner qris-c-tr"></span>
+                <span class="qris-corner qris-c-bl"></span>
+                <span class="qris-corner qris-c-br"></span>
+                <img src="{{ asset('images/QRIS.jpeg') }}" alt="QRIS QR Code" style="width:180px; height:180px; display:block; border-radius:8px;">
+            </div>
+
+            <p class="qris-scan-hint">Arahkan kamera ke QR Code di atas<br>menggunakan aplikasi e-wallet atau m-banking</p>
+
+            <div class="qris-steps-grid">
+                <div class="qris-step-item">
+                    <span class="qris-step-num">1</span>
+                    <p class="qris-step-text">Buka aplikasi e-wallet / m-banking</p>
+                </div>
+                <div class="qris-step-item">
+                    <span class="qris-step-num">2</span>
+                    <p class="qris-step-text">Pilih fitur Scan QR / QRIS</p>
+                </div>
+                <div class="qris-step-item">
+                    <span class="qris-step-num">3</span>
+                    <p class="qris-step-text">Arahkan kamera ke QR Code</p>
+                </div>
+                <div class="qris-step-item">
+                    <span class="qris-step-num">4</span>
+                    <p class="qris-step-text">Konfirmasi nominal pembayaran</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="qris-modal-footer">
+            <button type="button" class="btn-qris-cancel" onclick="cancelQrisPayment()">Batal</button>
+            <button type="button" class="btn-qris-confirm" id="qris-confirm-btn" onclick="confirmQrisPayment()">
+                <i data-lucide="check-circle-2"></i>
+                <span>Pembayaran Selesai</span>
+            </button>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -366,12 +433,72 @@
             paidInput.placeholder = 'Masukan nominal tunai...';
             changeBox.style.display = 'flex';
             document.getElementById('summary-change').textContent = '0';
+        } else if (method === 'qris') {
+            paidLabel.textContent = 'Nominal Pembayaran QRIS';
+            paidInput.value = grandTotal;
+            paidInput.readOnly = true;
+            changeBox.style.display = 'none';
+            openQrisModal();
         } else {
             paidLabel.textContent = 'Nominal Pembayaran Non-Tunai';
             paidInput.value = grandTotal;
             paidInput.readOnly = true;
             changeBox.style.display = 'none';
         }
+    }
+
+    function openQrisModal() {
+        if (cart.length === 0) {
+            alert('Keranjang masih kosong! Tambahkan produk terlebih dahulu.');
+            document.getElementById('payment_method').value = 'cash';
+            handlePaymentMethodChange();
+            return;
+        }
+        const totalText = document.getElementById('summary-total').textContent;
+        document.getElementById('qris-total-display').textContent = 'Rp ' + totalText;
+
+        const modal = document.getElementById('qris-modal');
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('qris-modal-open');
+            document.getElementById('qris-modal-card').classList.add('qris-card-open');
+        }, 10);
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function closeQrisModal(event) {
+        if (event && event.target !== document.getElementById('qris-modal')) return;
+        cancelQrisPayment();
+    }
+
+    function cancelQrisPayment() {
+        const modal = document.getElementById('qris-modal');
+        const card = document.getElementById('qris-modal-card');
+        modal.classList.remove('qris-modal-open');
+        card.classList.remove('qris-card-open');
+        setTimeout(() => { modal.style.display = 'none'; }, 280);
+
+        // Reset ke cash
+        document.getElementById('payment_method').value = 'cash';
+        handlePaymentMethodChange();
+    }
+
+    function confirmQrisPayment() {
+        const btn = document.getElementById('qris-confirm-btn');
+        btn.innerHTML = '<i data-lucide="loader-circle" style="animation: spin 1s linear infinite;"></i> <span>Memproses...</span>';
+        btn.disabled = true;
+        if (window.lucide) lucide.createIcons();
+
+        setTimeout(() => {
+            const modal = document.getElementById('qris-modal');
+            const card = document.getElementById('qris-modal-card');
+            modal.classList.remove('qris-modal-open');
+            card.classList.remove('qris-card-open');
+            setTimeout(() => { modal.style.display = 'none'; }, 280);
+
+            // Submit form
+            document.getElementById('checkout-form').submit();
+        }, 800);
     }
 
     function filterPOSProducts() {
@@ -412,6 +539,12 @@
             return e.preventDefault();
         }
 
+        const method = document.getElementById('payment_method').value;
+        if (method === 'qris') {
+            // QRIS sudah dikonfirmasi lewat modal, allow submit
+            return;
+        }
+
         const paidInput = document.getElementById('paid_amount');
         const paid = parseFloat(paidInput.value) || 0;
         const totalText = document.getElementById('summary-total').textContent;
@@ -429,422 +562,4 @@
         }).format(val);
     }
 </script>
-
-<style>
-    /* ─── FIGMA BRIGHT CLEAN MINIMALIST RESETS ─── */
-    body {
-        background-color: #f8fafc !important;
-    }
-
-    .pos-container {
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: 0;
-        height: calc(100vh - 120px);
-        margin: -20px;
-    }
-
-    /* ─── LEFT SIDE CONTENT ─── */
-    .pos-catalog-section {
-        background: #ffffff;
-        padding: 24px;
-        border-right: 2px solid #e2e8f0;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        overflow-y: auto;
-    }
-
-    .pos-section-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #0f172a;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-    }
-
-    .pos-section-title i {
-        width: 20px;
-        height: 20px;
-        color: #2563eb;
-    }
-
-    .pos-search-wrapper {
-        position: relative;
-        width: 280px;
-    }
-
-    .pos-search-wrapper .search-icon {
-        position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #94a3b8;
-        width: 16px;
-        height: 16px;
-    }
-
-    .pos-search-input {
-        width: 100%;
-        padding: 8px 12px 8px 38px;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        color: #1e293b;
-        outline: none;
-    }
-
-    .pos-search-input:focus {
-        border-color: #2563eb;
-    }
-
-    .pos-category-scroll {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #f1f5f9;
-    }
-
-    .pos-category-scroll::-webkit-scrollbar {
-        height: 4px;
-    }
-
-    .pos-category-scroll::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-    }
-
-    .category-btn {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: #475569;
-        white-space: nowrap;
-        cursor: pointer;
-        transition: all 0.15s ease;
-    }
-
-    .category-btn.active,
-    .category-btn:hover {
-        background: #2563eb;
-        color: #ffffff;
-        border-color: #2563eb;
-    }
-
-    .pos-products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-        gap: 16px;
-        padding-top: 4px;
-    }
-
-    .product-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 12px;
-        cursor: pointer;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        transition: transform 0.15s, border-color 0.15s;
-    }
-
-    .product-card:hover {
-        transform: translateY(-2px);
-        border-color: #cbd5e1;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
-    }
-
-    .badge-category {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: #e0f2fe;
-        color: #0369a1;
-        font-size: 0.65rem;
-        font-weight: 600;
-        padding: 2px 6px;
-        border-radius: 4px;
-    }
-
-    .product-image-placeholder {
-        background: #f1f5f9;
-        aspect-ratio: 4/3;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        margin-top: 12px;
-    }
-
-    .product-sku {
-        font-size: 0.7rem;
-        color: #94a3b8;
-    }
-
-    .product-title {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #0f172a;
-        margin: 2px 0 4px 0;
-        line-height: 1.3;
-        min-height: 34px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .product-price {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: #2563eb;
-    }
-
-    .product-stock-status {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.75rem;
-        color: #64748b;
-        border-top: 1px dashed #f1f5f9;
-        padding-top: 6px;
-        margin-top: 2px;
-    }
-
-    /* ─── RIGHT SIDE CART ─── */
-    .pos-cart-panel {
-        background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .cart-header {
-        padding: 16px 20px;
-        border-bottom: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .cart-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .cart-title i {
-        color: #2563eb;
-        width: 18px;
-        height: 18px;
-    }
-
-    .btn-clear-cart {
-        background: none;
-        border: none;
-        color: #ef4444;
-        font-size: 0.75rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .btn-clear-cart i {
-        width: 14px;
-        height: 14px;
-    }
-
-    .cart-empty-state {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 30px;
-        color: #94a3b8;
-        text-align: center;
-    }
-
-    .cart-empty-state .empty-icon {
-        width: 44px;
-        height: 44px;
-        margin-bottom: 8px;
-        opacity: 0.4;
-    }
-
-    .cart-empty-state p {
-        font-size: 0.8rem;
-        margin: 0;
-    }
-
-    .cart-items-list {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0;
-    }
-
-    .cart-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 20px !important;
-        border-bottom: 1px solid #f1f5f9;
-        min-height: 56px;
-        box-sizing: border-box;
-        width: 100% !important;
-    }
-
-    .btn-qty {
-        background: #f1f5f9;
-        border: none;
-        color: #475569;
-        width: 24px;
-        height: 28px;
-        font-size: 0.85rem;
-        font-weight: bold;
-        border-radius: 4px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-    }
-
-    .btn-qty:hover {
-        background: #e2e8f0;
-    }
-
-    .checkout-footer {
-        border-top: 1px solid #e2e8f0;
-        padding: 16px 20px;
-        background: #f8fafc;
-    }
-
-    .summary-box {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        margin-bottom: 12px;
-    }
-
-    .pos-summary-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.8rem;
-        color: #475569;
-    }
-
-    .pos-summary-row.align-center {
-        align-items: center;
-    }
-
-    .pos-total-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: #2563eb;
-        border-top: 1px dashed #cbd5e1;
-        padding-top: 6px;
-        margin-top: 2px;
-    }
-
-    .payment-details-box {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .form-group-sm {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-    }
-
-    .form-group-sm label {
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: #64748b;
-        text-transform: uppercase;
-    }
-
-    .form-input-sm,
-    .form-select-sm {
-        padding: 6px 10px;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        font-size: 0.8rem;
-        color: #0f172a;
-        outline: none;
-    }
-
-    .form-input-sm.full-width {
-        width: 100%;
-    }
-
-    .btn-checkout {
-        background: #2563eb;
-        color: #ffffff;
-        border: none;
-        width: 100%;
-        padding: 10px;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-    }
-
-    .btn-checkout:hover {
-        background: #1d4ed8;
-    }
-
-    .out-of-stock {
-        opacity: 0.5;
-        background: #f8fafc;
-        cursor: not-allowed !important;
-    }
-
-    .text-truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .text-error {
-        color: #ef4444;
-    }
-
-    .text-warning {
-        color: #f59e0b;
-    }
-
-    .text-success {
-        color: #10b981;
-    }
-</style>
 @endsection
