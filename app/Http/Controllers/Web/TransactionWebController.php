@@ -60,7 +60,7 @@ class TransactionWebController extends Controller
             ->active()
             ->with('category:id,name')
             ->orderBy('name')
-            ->get(['id', 'name', 'sku', 'selling_price', 'stock_qty', 'unit', 'category_id']);
+            ->get(['id', 'name', 'sku', 'selling_price', 'stock_qty', 'unit', 'category_id', 'image_path']);
 
         return view('web.transactions.create', compact('products'));
     }

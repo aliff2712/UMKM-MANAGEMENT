@@ -39,9 +39,9 @@
         <div class="pos-products-grid" id="pos-products-list">
             @foreach($products as $p)
             @php
-                $isOut = $p->stock_qty <= 0;
-                $currentCategory = strtolower($p->category->name ?? 'lainnya');
-            @endphp
+            $isOut = $p->stock_qty <= 0;
+                $currentCategory=strtolower($p->category->name ?? 'lainnya');
+                @endphp
                 <div class="product-card {{ $isOut ? 'out-of-stock' : '' }}"
                     data-id="{{ $p->id }}"
                     data-name="{{ $p->name }}"
@@ -55,11 +55,26 @@
                         {{ $p->category->name ?? 'Lainnya' }}
                     </div>
 
-                    <div class="product-image-placeholder">
-                        @if(str_contains($currentCategory, 'minuman')) 🍹
-                        @elseif(str_contains($currentCategory, 'makanan')) 🍔
-                        @elseif(str_contains($currentCategory, 'snack')) 🍿
-                        @else 📦 @endif
+                    <div class="product-image-wrapper">
+                        @if($p->image_path)
+                        <img src="{{ $p->image_url }}"
+                            alt="{{ $p->name }}"
+                            class="product-card-img"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="product-image-placeholder" style="display:none;">
+                            @if(str_contains($currentCategory, 'minuman')) 🍹
+                            @elseif(str_contains($currentCategory, 'makanan')) 🍔
+                            @elseif(str_contains($currentCategory, 'snack')) 🍿
+                            @else 📦 @endif
+                        </div>
+                        @else
+                        <div class="product-image-placeholder">
+                            @if(str_contains($currentCategory, 'minuman')) 🍹
+                            @elseif(str_contains($currentCategory, 'makanan')) 🍔
+                            @elseif(str_contains($currentCategory, 'snack')) 🍿
+                            @else 📦 @endif
+                        </div>
+                        @endif
                     </div>
 
                     <div class="product-info">
@@ -161,65 +176,77 @@
 <div id="qris-modal" class="qris-modal-overlay" style="display:none;" onclick="closeQrisModal(event)">
     <div class="qris-modal-card" id="qris-modal-card">
 
+        {{-- Header --}}
         <div class="qris-modal-header">
             <div class="qris-header-left">
-                <span class="qris-badge-pill">QRIS</span>
-                <span class="qris-header-sub">Pembayaran Digital</span>
+                <div class="qris-logo-badge">
+                    <svg width="48" height="18" viewBox="0 0 48 18" fill="none">
+                        <rect width="48" height="18" rx="3" fill="#ED1C24" />
+                        <text x="5" y="13" font-family="Arial" font-weight="900" font-size="11" fill="white">QRIS</text>
+                    </svg>
+                </div>
+                <span class="qris-header-title">Scan & Bayar</span>
             </div>
             <button type="button" class="qris-close-btn" onclick="cancelQrisPayment()">
                 <i data-lucide="x"></i>
             </button>
         </div>
 
-        <div class="qris-modal-body">
-            <div class="qris-amount-card">
-                <div>
-                    <div class="qris-amount-label">Total Pembayaran</div>
-                    <div class="qris-amount-value" id="qris-total-display">Rp 0</div>
-                </div>
-                <div class="qris-waiting-badge">
-                    <span class="qris-dot-pulse"></span>
-                    <span>Menunggu</span>
-                </div>
-            </div>
-
-            <div class="qris-qr-frame">
-                <span class="qris-corner qris-c-tl"></span>
-                <span class="qris-corner qris-c-tr"></span>
-                <span class="qris-corner qris-c-bl"></span>
-                <span class="qris-corner qris-c-br"></span>
-                <img src="{{ asset('images/QRIS.jpeg') }}" alt="QRIS QR Code" style="width:180px; height:180px; display:block; border-radius:8px;">
-            </div>
-
-            <p class="qris-scan-hint">Arahkan kamera ke QR Code di atas<br>menggunakan aplikasi e-wallet atau m-banking</p>
-
-            <div class="qris-steps-grid">
-                <div class="qris-step-item">
-                    <span class="qris-step-num">1</span>
-                    <p class="qris-step-text">Buka aplikasi e-wallet / m-banking</p>
-                </div>
-                <div class="qris-step-item">
-                    <span class="qris-step-num">2</span>
-                    <p class="qris-step-text">Pilih fitur Scan QR / QRIS</p>
-                </div>
-                <div class="qris-step-item">
-                    <span class="qris-step-num">3</span>
-                    <p class="qris-step-text">Arahkan kamera ke QR Code</p>
-                </div>
-                <div class="qris-step-item">
-                    <span class="qris-step-num">4</span>
-                    <p class="qris-step-text">Konfirmasi nominal pembayaran</p>
-                </div>
+        {{-- Amount Banner --}}
+        <div class="qris-amount-banner">
+            <div class="qris-amount-label-top">Total Pembayaran</div>
+            <div class="qris-amount-big" id="qris-total-display">Rp 0</div>
+            <div class="qris-status-pill">
+                <span class="qris-dot-pulse"></span>
+                Menunggu Pembayaran
             </div>
         </div>
 
+        {{-- QR Code Area --}}
+        <div class="qris-qr-area">
+            <div class="qris-qr-box">
+                <img src="{{ asset('images/QRIS.jpeg') }}"
+                    alt="QRIS QR Code"
+                    class="qris-qr-image">
+            </div>
+            <p class="qris-scan-hint">
+                Arahkan kamera ke QR Code di atas<br>
+                menggunakan aplikasi e-wallet atau m-banking
+            </p>
+        </div>
+
+        {{-- Steps --}}
+        <div class="qris-steps-list">
+            <div class="qris-step-row">
+                <span class="qris-step-num">1</span>
+                <p class="qris-step-text">Buka aplikasi e-wallet / m-banking</p>
+            </div>
+            <div class="qris-step-row">
+                <span class="qris-step-num">2</span>
+                <p class="qris-step-text">Pilih fitur Scan QR / QRIS</p>
+            </div>
+            <div class="qris-step-row">
+                <span class="qris-step-num">3</span>
+                <p class="qris-step-text">Arahkan kamera ke QR Code</p>
+            </div>
+            <div class="qris-step-row">
+                <span class="qris-step-num">4</span>
+                <p class="qris-step-text">Konfirmasi nominal pembayaran</p>
+            </div>
+        </div>
+
+        {{-- Footer --}}
         <div class="qris-modal-footer">
-            <button type="button" class="btn-qris-cancel" onclick="cancelQrisPayment()">Batal</button>
+            <button type="button" class="btn-qris-cancel" onclick="cancelQrisPayment()">
+                <i data-lucide="x-circle"></i>
+                Batal
+            </button>
             <button type="button" class="btn-qris-confirm" id="qris-confirm-btn" onclick="confirmQrisPayment()">
                 <i data-lucide="check-circle-2"></i>
                 <span>Pembayaran Selesai</span>
             </button>
         </div>
+
     </div>
 </div>
 @endsection
@@ -476,7 +503,9 @@
         const card = document.getElementById('qris-modal-card');
         modal.classList.remove('qris-modal-open');
         card.classList.remove('qris-card-open');
-        setTimeout(() => { modal.style.display = 'none'; }, 280);
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 280);
 
         // Reset ke cash
         document.getElementById('payment_method').value = 'cash';
@@ -494,7 +523,9 @@
             const card = document.getElementById('qris-modal-card');
             modal.classList.remove('qris-modal-open');
             card.classList.remove('qris-card-open');
-            setTimeout(() => { modal.style.display = 'none'; }, 280);
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 280);
 
             // Submit form
             document.getElementById('checkout-form').submit();

@@ -1,20 +1,17 @@
 /* =========================================================
-   TechneFest UMKM - Premium Light-Mode Figma Design CSS
-   Migrated from Dark Neon to Clean & Bright Minimalist
-=========================================================
-*/
+   TechneFest UMKM - Premium Light-Mode Dashboard CSS
+   Clean & Professional, Mobile-First
+========================================================= */
 
 :root {
-    /* Background & Panel Cerah */
     --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     --sidebar-bg: #ffffff;
-    --header-bg: rgba(255, 255, 255, 0.85);
+    --header-bg: rgba(255, 255, 255, 0.9);
     --glass-bg: #ffffff;
     --glass-bg-hover: #f8fafc;
     --glass-border: #e2e8f0;
     --glass-border-focus: #1e56d7;
 
-    /* Warna Aksen Utama Berbasis UI Figma POS */
     --primary: #1e56d7;
     --primary-hover: #1a4bbf;
     --primary-glow: rgba(30, 86, 215, 0.15);
@@ -23,14 +20,11 @@
     --cyan: #0ea5e9;
     --cyan-glow: rgba(14, 165, 233, 0.15);
 
-    /* Tipografi Kontras Tinggi (Gelap di atas Putih) */
     --text-main: #0f172a;
     --text-muted: #64748b;
     --text-dark: #1e293b;
-
     --input-bg: #f8fafc;
 
-    /* Status feedback disesuaikan untuk background terang */
     --error: #ef4444;
     --error-bg: #fef2f2;
     --error-border: #fca5a5;
@@ -53,249 +47,20 @@
     --border-radius-sm: 8px;
 }
 
-/* ── Reset & Global ────────────────────────────────────────── */
-* {
+/* ── Reset & Global ─────────────────────────────────────── */
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    min-width: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* =========================================================
-   FINAL MOBILE RESPONSIVE FIX
-========================================================= */
-
-html,
-body {
+html, body {
     width: 100%;
     overflow-x: hidden;
-}
-
-* {
-    min-width: 0;
-}
-
-/* Safe container */
-.content-body,
-.glass-card,
-.main-wrapper {
-    width: 100%;
-    max-width: 100%;
-}
-
-/* =========================================================
-   MOBILE FIX
-========================================================= */
-
-@media (max-width: 768px) {
-
-    /* ===== HEADER ===== */
-
-    .main-header {
-        height: auto;
-        min-height: 60px;
-        padding: 10px 14px;
-        gap: 10px;
-    }
-
-    .header-title-section {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .header-title-section h2 {
-        font-size: 0.92rem;
-        line-height: 1.2;
-    }
-
-    .header-user-section {
-        gap: 8px;
-        flex-shrink: 0;
-    }
-
-    .user-profile-summary {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        max-width: 120px;
-    }
-
-    .user-name {
-        font-size: 0.75rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
-    }
-
-    .role-badge {
-        font-size: 0.55rem;
-        padding: 2px 6px;
-    }
-
-    /* ===== CONTENT ===== */
-
-    .content-body {
-        padding: 12px;
-    }
-
-    .glass-card {
-        padding: 14px;
-        border-radius: 14px;
-        overflow: hidden;
-    }
-
-    /* ===== FORM ===== */
-
-    .form-group {
-        width: 100%;
-    }
-
-    .form-control {
-        font-size: 16px;
-        /* prevent zoom ios */
-    }
-
-    /* ===== BUTTON ===== */
-
-    .btn {
-        min-height: 42px;
-    }
-
-    /* ===== FILTER FORM ===== */
-
-    .report-filter-form {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .report-filter-inputs {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        width: 100%;
-    }
-
-    .report-filter-actions {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .report-filter-actions .btn {
-        width: 100%;
-    }
-
-    /* ===== STAT CARD ===== */
-
-    .stat-grid,
-    .stat-grid-3 {
-        grid-template-columns: 1fr !important;
-        gap: 12px;
-    }
-
-    .stat-card {
-        padding: 14px;
-        min-height: auto;
-    }
-
-    .stat-card-value {
-        font-size: 1.2rem !important;
-        word-break: break-word;
-    }
-
-    .stat-card-desc {
-        font-size: 0.72rem;
-        line-height: 1.4;
-    }
-
-    /* ===== TABLE ===== */
-
-    .table-container {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .custom-table {
-        min-width: 600px;
-    }
-
-    /* ===== CHART ===== */
-
-    .chart-wrapper {
-        height: 220px !important;
-    }
-
-    canvas {
-        max-width: 100% !important;
-    }
-
-    /* ===== GRID ===== */
-
-    .grid-2,
-    .grid-3,
-    .dashboard-grid-2col {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* ===== FLEX ===== */
-
-    .flex-between {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .flex-between .btn {
-        width: 100%;
-    }
-}
-
-/* =========================================================
-   SMALL PHONE FIX
-========================================================= */
-
-@media (max-width: 480px) {
-
-    .main-header {
-        padding: 10px 12px;
-    }
-
-    .header-title-section h2 {
-        font-size: 0.82rem;
-    }
-
-    .user-name {
-        display: none;
-    }
-
-    .content-body {
-        padding: 10px;
-    }
-
-    .glass-card {
-        padding: 12px;
-    }
-
-    .stat-card-value {
-        font-size: 1rem !important;
-    }
-
-    .chart-wrapper {
-        height: 180px !important;
-    }
-
-    .btn {
-        font-size: 0.82rem;
-    }
-
-    .custom-table {
-        min-width: 500px;
-    }
 }
 
 body {
@@ -311,43 +76,24 @@ a {
     text-decoration: none;
     transition: color var(--transition-speed);
 }
+a:hover { color: var(--primary-hover); }
 
-a:hover {
-    color: var(--primary-hover);
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-/* Custom Scrollbar Lebih Bersih */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* ── Layout & Structure ────────────────────────────────────────── */
+/* ── Layout ─────────────────────────────────────────────── */
 .app-container {
     display: flex;
     min-height: 100vh;
     position: relative;
 }
 
-/* Orb ambient dimatikan karena tema figma cerah tidak butuh glow gaib */
-.ambient-orb {
-    display: none;
-}
+.ambient-orb { display: none; }
 
-/* ── Sidebar (Cerah, Bersih, Profesional) ─────────────────────── */
+/* ── Sidebar ────────────────────────────────────────────── */
 .sidebar {
     width: var(--sidebar-width);
     background: var(--sidebar-bg);
@@ -360,7 +106,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     transition: transform var(--transition-speed) ease;
-    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.02);
+    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.03);
 }
 
 .sidebar-brand {
@@ -370,6 +116,7 @@ a:hover {
     padding: 0 24px;
     border-bottom: 1px solid var(--glass-border);
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .brand-icon {
@@ -381,6 +128,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     color: white;
+    flex-shrink: 0;
 }
 
 .brand-text {
@@ -427,10 +175,7 @@ a:hover {
     transition: all var(--transition-speed) ease;
 }
 
-.menu-item i {
-    width: 18px;
-    height: 18px;
-}
+.menu-item i { width: 18px; height: 18px; flex-shrink: 0; }
 
 .menu-item:hover {
     color: var(--text-main);
@@ -443,7 +188,7 @@ a:hover {
     font-weight: 700;
 }
 
-/* ── Main Wrapper ────────────────────────────────────────── */
+/* ── Main Wrapper ───────────────────────────────────────── */
 .main-wrapper {
     flex: 1;
     margin-left: var(--sidebar-width);
@@ -451,9 +196,10 @@ a:hover {
     flex-direction: column;
     min-height: 100vh;
     transition: margin-left var(--transition-speed) ease;
+    min-width: 0;
 }
 
-/* ── Header ───────────────────────────────────────────────────── */
+/* ── Header ─────────────────────────────────────────────── */
 .main-header {
     height: var(--header-height);
     background: var(--header-bg);
@@ -467,28 +213,37 @@ a:hover {
     position: sticky;
     top: 0;
     z-index: 90;
+    gap: 16px;
+}
+
+.header-title-section {
+    flex: 1;
+    min-width: 0;
 }
 
 .header-title-section h2 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .header-user-section {
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-shrink: 0;
 }
 
-.user-profile-summary {
-    text-align: right;
-}
+.user-profile-summary { text-align: right; }
 
 .user-name {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-main);
+    white-space: nowrap;
 }
 
 .user-role {
@@ -496,7 +251,6 @@ a:hover {
     color: var(--text-muted);
 }
 
-/* Role Badge Cerah */
 .role-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -508,23 +262,9 @@ a:hover {
     margin-left: 4px;
 }
 
-.role-owner {
-    background: #fdf2f8;
-    color: #db2777;
-    border: 1px solid #fbcfe8;
-}
-
-.role-admin {
-    background: #ecfeff;
-    color: #0891b2;
-    border: 1px solid #c5f6fa;
-}
-
-.role-kasir {
-    background: #f0fdf4;
-    color: #16a34a;
-    border: 1px solid #bbf7d0;
-}
+.role-owner  { background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; }
+.role-admin  { background: #ecfeff; color: #0891b2; border: 1px solid #c5f6fa; }
+.role-kasir  { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
 
 .btn-logout {
     background: #ffffff;
@@ -539,6 +279,8 @@ a:hover {
     font-size: 0.85rem;
     cursor: pointer;
     transition: all var(--transition-speed);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .btn-logout:hover {
@@ -555,43 +297,38 @@ a:hover {
     color: var(--text-main);
     padding: 8px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
-/* ── Content Body ────────────────────────────────────────────── */
+/* ── Content Body ───────────────────────────────────────── */
 .content-body {
     flex: 1;
     padding: 32px;
-    max-width: 1400px;
     width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
-    animation: contentAppear 0.4s ease-out forwards;
+    animation: contentAppear 0.35s ease-out forwards;
 }
 
 @keyframes contentAppear {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Cards (Putih Bersih dengan Soft Shadow) ─────────────────── */
+/* ── Glass Cards ────────────────────────────────────────── */
 .glass-card {
     background: #ffffff;
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-lg);
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
     transition: all var(--transition-speed) ease;
+    width: 100%;
 }
 
 .glass-card:hover {
     border-color: #cbd5e1;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05), 0 12px 24px rgba(0,0,0,0.04);
 }
 
 .glass-card-header {
@@ -601,28 +338,38 @@ a:hover {
     margin-bottom: 20px;
     border-bottom: 1px solid var(--glass-border);
     padding-bottom: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .glass-card-title {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
     color: var(--text-main);
+    min-width: 0;
 }
 
-/* Stat Cards */
+.glass-card-title span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Stat Cards ─────────────────────────────────────────── */
 .stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    margin-bottom: 32px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
 }
 
 .stat-card {
     position: relative;
     overflow: hidden;
+    padding: 20px 20px 20px 24px;
 }
 
 .stat-card::after {
@@ -632,58 +379,64 @@ a:hover {
     left: 0;
     width: 4px;
     height: 100%;
+    border-radius: 4px 0 0 4px;
 }
 
-.stat-card.primary::after {
-    background: var(--primary);
-}
-
-.stat-card.accent::after {
-    background: var(--accent);
-}
-
-.stat-card.cyan::after {
-    background: var(--cyan);
-}
-
-.stat-card.success::after {
-    background: var(--success);
-}
-
-.stat-card.error::after {
-    background: var(--error);
-}
-
-.stat-card.warning::after {
-    background: var(--warning);
-}
+.stat-card.primary::after { background: var(--primary); }
+.stat-card.accent::after  { background: var(--accent); }
+.stat-card.cyan::after    { background: var(--cyan); }
+.stat-card.success::after { background: var(--success); }
+.stat-card.error::after   { background: var(--error); }
+.stat-card.warning::after { background: var(--warning); }
 
 .stat-card-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* KEY FIX: clamp() handles all screen sizes automatically */
 .stat-card-value {
-    font-size: 1.6rem;
+    font-size: clamp(1rem, 3vw, 1.55rem);
     font-weight: 800;
-    margin-bottom: 4px;
-    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
     color: var(--text-main);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
 }
 
 .stat-card-desc {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 4px;
+    flex-wrap: wrap;
+    line-height: 1.4;
 }
 
-/* ── Badges ──────────────────────────────────────────────────── */
+/* ── Dashboard Grid ─────────────────────────────────────── */
+.dashboard-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-wrapper {
+    height: 280px;
+    position: relative;
+}
+
+/* ── Badges ─────────────────────────────────────────────── */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -692,77 +445,58 @@ a:hover {
     border-radius: 99px;
     font-size: 0.75rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
-.badge-success {
-    background: var(--success-bg);
-    color: #065f46;
-    border: 1px solid var(--success-border);
-}
+.badge-success { background: var(--success-bg); color: #065f46; border: 1px solid var(--success-border); }
+.badge-danger  { background: var(--error-bg);   color: #991b1b; border: 1px solid var(--error-border); }
+.badge-warning { background: var(--warning-bg); color: #92400e; border: 1px solid var(--warning-border); }
+.badge-info    { background: #eff6ff;            color: #1e40af; border: 1px solid #bfdbfe; }
 
-.badge-danger {
-    background: var(--error-bg);
-    color: #991b1b;
-    border: 1px solid var(--error-border);
-}
-
-.badge-warning {
-    background: var(--warning-bg);
-    color: #92400e;
-    border: 1px solid var(--warning-border);
-}
-
-.badge-info {
-    background: #eff6ff;
-    color: #1e40af;
-    border: 1px solid #bfdbfe;
-}
-
-/* ── Tables ──────────────────────────────────────────────────── */
+/* ── Tables ─────────────────────────────────────────────── */
 .table-container {
     overflow-x: auto;
     width: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 .custom-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
 }
 
 .custom-table th {
-    padding: 14px 16px;
+    padding: 12px 16px;
     font-weight: 700;
     color: var(--text-muted);
     border-bottom: 2px solid var(--glass-border);
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     letter-spacing: 0.5px;
     background: #f8fafc;
+    white-space: nowrap;
 }
 
 .custom-table td {
-    padding: 16px;
+    padding: 14px 16px;
     border-bottom: 1px solid var(--glass-border);
     vertical-align: middle;
     color: var(--text-dark);
 }
 
-.custom-table tbody tr:hover {
-    background: var(--glass-bg-hover);
-}
+.custom-table tbody tr:last-child td { border-bottom: none; }
+.custom-table tbody tr:hover { background: var(--glass-bg-hover); }
 
-/* ── Forms ───────────────────────────────────────────────────── */
+/* ── Forms ──────────────────────────────────────────────── */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
-.form-group {
-    margin-bottom: 18px;
-}
+.form-group { margin-bottom: 18px; }
 
 .form-label {
     display: block;
@@ -787,9 +521,7 @@ a:hover {
     outline: none;
 }
 
-.form-control::placeholder {
-    color: #94a3b8;
-}
+.form-control::placeholder { color: #94a3b8; }
 
 .form-control:focus {
     border-color: var(--primary);
@@ -806,7 +538,7 @@ select.form-control {
     padding-right: 40px;
 }
 
-/* ── Buttons (Figma Solid Style) ────────────────────────────── */
+/* ── Buttons ────────────────────────────────────────────── */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -814,59 +546,32 @@ select.form-control {
     gap: 8px;
     padding: 10px 18px;
     border-radius: var(--border-radius-md);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-speed);
     border: none;
     outline: none;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-.btn-primary {
-    background: var(--primary);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-hover);
-}
-
-.btn-accent {
-    background: var(--accent);
-    color: white;
-}
-
-.btn-accent:hover {
-    background: #2563eb;
-}
-
-.btn-secondary {
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    color: var(--text-dark);
-}
-
-.btn-secondary:hover {
-    background: #f8fafc;
-    border-color: #94a3b8;
-}
-
-.btn-danger {
-    background: var(--error);
-    color: white;
-}
-
-.btn-danger:hover {
-    background: #dc2626;
-}
+.btn-primary      { background: var(--primary);  color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-accent       { background: var(--accent);   color: white; }
+.btn-accent:hover  { background: #2563eb; }
+.btn-secondary    { background: #ffffff; border: 1px solid #cbd5e1; color: var(--text-dark); }
+.btn-secondary:hover { background: #f8fafc; border-color: #94a3b8; }
+.btn-danger       { background: var(--error); color: white; }
+.btn-danger:hover  { background: #dc2626; }
 
 .btn-sm {
     padding: 6px 12px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     border-radius: var(--border-radius-sm);
 }
 
-/* ── Alerts ──────────────────────────────────────────────────── */
+/* ── Alerts ─────────────────────────────────────────────── */
 .alert {
     padding: 14px 16px;
     border-radius: var(--border-radius-md);
@@ -878,19 +583,20 @@ select.form-control {
     font-size: 0.9rem;
 }
 
-.alert-success {
-    background: var(--success-bg);
-    color: #065f46;
-    border: 1px solid var(--success-border);
+.alert-success { background: var(--success-bg); color: #065f46; border: 1px solid var(--success-border); }
+.alert-danger  { background: var(--error-bg);   color: #991b1b; border: 1px solid var(--error-border); }
+
+/* ── Empty State ────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.alert-danger {
-    background: var(--error-bg);
-    color: #991b1b;
-    border: 1px solid var(--error-border);
-}
-
-/* ── Chatbot Module (Clean Light Theme) ───────────────────────── */
+/* ── Chat ───────────────────────────────────────────────── */
 .chat-container {
     height: 520px;
     display: flex;
@@ -922,7 +628,6 @@ select.form-control {
     color: var(--text-main);
     border: 1px solid var(--glass-border);
     border-bottom-left-radius: 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .bubble-sent {
@@ -932,7 +637,7 @@ select.form-control {
     border-bottom-right-radius: 4px;
 }
 
-/* ── POS / Cashier Interface ────────────────────────────────── */
+/* ── POS ────────────────────────────────────────────────── */
 .pos-layout {
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -976,7 +681,7 @@ select.form-control {
 .pos-total-row {
     display: flex;
     justify-content: space-between;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 800;
     margin-top: 12px;
     padding-top: 12px;
@@ -984,402 +689,7 @@ select.form-control {
     color: var(--primary);
 }
 
-/* ── Receipt Styles ────────────────────────────────────────── */
-.receipt-paper {
-    background: white;
-    color: #000000;
-    max-width: 360px;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-/* ── Utilities ──────────────────────────────────────────────── */
-.flex-between {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.mb-4 {
-    margin-bottom: 1rem;
-}
-
-.mb-6 {
-    margin-bottom: 1.5rem;
-}
-
-.mt-4 {
-    margin-top: 1rem;
-}
-
-.text-success {
-    color: #10b981;
-}
-
-.text-error {
-    color: #ef4444;
-}
-
-.text-primary {
-    color: var(--primary);
-}
-
-/* ── Responsive Design ────────────────────────────────────────── */
-
-/* ─── Tablet (max 1024px) ──────────────────────────────────────── */
-@media (max-width: 1024px) {
-
-    /* Stat grid 2 kolom di tablet */
-    .stat-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    /* Dashboard main grid stack jadi 1 kolom */
-    .content-body > div[style*="grid-template-columns:1fr 1fr"] {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* POS layout stack */
-    .pos-layout,
-    .pos-container {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* ─── Mobile (max 768px) ──────────────────────────────────────── */
-@media (max-width: 768px) {
-
-    /* === SIDEBAR === */
-    .sidebar {
-        transform: translateX(-100%);
-        z-index: 200;
-        box-shadow: 4px 0 24px rgba(15, 23, 42, 0.12);
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    /* Overlay gelap di belakang sidebar saat terbuka */
-    .sidebar-overlay {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.35);
-        z-index: 150;
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-    }
-
-    /* === MAIN LAYOUT === */
-    .main-wrapper {
-        margin-left: 0;
-    }
-
-    .mobile-sidebar-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* === HEADER === */
-    .main-header {
-        padding: 0 16px;
-        height: 60px;
-    }
-
-    .header-title-section h2 {
-        font-size: 1rem;
-    }
-
-    /* Sembunyikan nama user & outlet, tampilkan hanya badge role */
-    .user-profile-summary .user-role {
-        display: none;
-    }
-
-    .user-profile-summary .user-name {
-        font-size: 0.8rem;
-    }
-
-    /* Tombol logout: icon saja, sembunyikan teks */
-    .btn-logout span {
-        display: none;
-    }
-
-    .btn-logout {
-        padding: 8px;
-        border-radius: var(--border-radius-sm);
-    }
-
-    /* === CONTENT BODY === */
-    .content-body {
-        padding: 16px;
-    }
-
-    /* === STAT GRID: 2 kolom di mobile === */
-    .stat-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px;
-        margin-bottom: 20px;
-    }
-
-    .stat-card-value {
-        font-size: 1.15rem !important;
-        letter-spacing: -0.3px;
-    }
-
-    .stat-card-label {
-        font-size: 0.68rem;
-    }
-
-    .stat-card-desc {
-        font-size: 0.72rem;
-    }
-
-    /* === DASHBOARD MAIN GRID: 1 kolom === */
-    .content-body > div[style*="grid-template-columns"] {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 16px !important;
-    }
-
-    /* === GLASS CARD === */
-    .glass-card {
-        padding: 16px;
-    }
-
-    .glass-card-header {
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 14px;
-        padding-bottom: 12px;
-    }
-
-    .glass-card-title {
-        font-size: 0.95rem;
-    }
-
-    /* === FLEX BETWEEN: stack di mobile kalau perlu === */
-    .flex-between {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    /* === TABEL: scroll horizontal === */
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: var(--border-radius-md);
-    }
-
-    .custom-table {
-        min-width: 540px;
-        font-size: 0.82rem;
-    }
-
-    .custom-table th,
-    .custom-table td {
-        padding: 10px 12px;
-    }
-
-    /* === FORM GRID: 1 kolom === */
-    .form-grid {
-        grid-template-columns: 1fr !important;
-        gap: 0;
-    }
-
-    /* Filter form stack */
-    .glass-card > form[style*="display: flex"] {
-        flex-direction: column !important;
-        gap: 12px !important;
-    }
-
-    /* === TOMBOL: full width di mobile === */
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .btn-sm {
-        width: auto;
-    }
-
-    /* Header card action button tetap normal */
-    .glass-card-header .btn,
-    .glass-card-header .btn-sm,
-    .flex-between .btn,
-    .flex-between .btn-sm {
-        width: auto;
-    }
-
-    /* === ALERT === */
-    .alert {
-        font-size: 0.82rem;
-        padding: 12px;
-    }
-
-    /* === CHAT === */
-    .chat-container {
-        height: 420px;
-    }
-
-    .chat-bubble {
-        max-width: 88%;
-        font-size: 0.85rem;
-    }
-
-    /* === POS KASIR === */
-    .pos-container,
-    .pos-layout {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 16px;
-    }
-
-    .pos-catalog-section {
-        order: 1;
-    }
-
-    .pos-cart-panel {
-        order: 2;
-        max-height: none;
-    }
-
-    .pos-products-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px;
-        max-height: 380px;
-    }
-
-    .pos-search-wrapper {
-        width: 100%;
-        margin-top: 8px;
-    }
-
-    .pos-search-input {
-        width: 100%;
-    }
-
-    /* Category scroll tetap horizontal */
-    .pos-category-scroll {
-        display: flex;
-        overflow-x: auto;
-        gap: 8px;
-        padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .pos-category-scroll::-webkit-scrollbar {
-        display: none;
-    }
-
-    .category-btn {
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
-    /* Product card di POS lebih compact */
-    .product-card {
-        padding: 10px;
-    }
-
-    .product-image-placeholder {
-        font-size: 1.8rem;
-    }
-
-    .product-title {
-        font-size: 0.8rem;
-    }
-
-    .product-price {
-        font-size: 0.9rem;
-    }
-
-    /* Cart panel */
-    .cart-header {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .pos-total-row {
-        font-size: 1.1rem;
-    }
-
-    /* === RECEIPT === */
-    .receipt-paper {
-        max-width: 100%;
-        padding: 16px;
-    }
-
-    /* === MB UTILS === */
-    .mb-6 {
-        margin-bottom: 1rem;
-    }
-
-    /* === HIDE COLS DI TABEL === */
-    /* Sembunyikan kolom yang kurang penting di mobile */
-    .custom-table .hide-mobile {
-        display: none;
-    }
-}
-
-/* ─── HP Kecil (max 480px) ─────────────────────────────────────── */
-@media (max-width: 480px) {
-
-    /* Stat 1 kolom di HP kecil */
-    .stat-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .stat-card {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 14px 16px;
-    }
-
-    .stat-card::after {
-        width: 100%;
-        height: 3px;
-        top: auto;
-        bottom: 0;
-        left: 0;
-    }
-
-    .stat-card-value {
-        font-size: 1.3rem !important;
-        margin-bottom: 0;
-    }
-
-    .stat-card-label {
-        margin-bottom: 2px;
-    }
-
-    .header-title-section h2 {
-        font-size: 0.9rem;
-    }
-
-    /* POS produk 1 kolom di HP kecil */
-    .pos-products-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    .glass-card {
-        padding: 14px;
-        border-radius: var(--border-radius-md);
-    }
-
-    .content-body {
-        padding: 12px;
-    }
-}
-
-/* ── Receipt / Invoice Styles (Figma Bright Clean Version) ───── */
+/* ── Receipt ────────────────────────────────────────────── */
 .receipt-paper {
     background: #ffffff;
     color: #000000;
@@ -1387,7 +697,6 @@ select.form-control {
     margin: 0 auto;
     padding: 24px;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
-    /* Shadow diperhalus agar tidak terlalu kotor */
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-family: 'Courier New', Courier, monospace;
@@ -1397,7 +706,6 @@ select.form-control {
     text-align: center;
     margin-bottom: 20px;
     border-bottom: 1px dashed #cbd5e1;
-    /* Menggunakan abu-abu figma */
     padding-bottom: 12px;
 }
 
@@ -1420,10 +728,7 @@ select.form-control {
     margin-bottom: 6px;
 }
 
-.receipt-item-row {
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-}
+.receipt-item-row { font-size: 0.85rem; margin-bottom: 8px; }
 
 .receipt-item-desc {
     display: flex;
@@ -1431,158 +736,38 @@ select.form-control {
     margin-top: 2px;
 }
 
-/* Rule Cetak Printer Thermal / Kertas */
-@media print {
-    body * {
-        visibility: hidden;
-    }
+/* ── Grid Utilities ─────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 
-    .receipt-paper, .receipt-paper * {
-        visibility: visible;
-    }
-
-    .receipt-paper {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        max-width: 100%;
-        box-shadow: none;
-        border: none;
-        padding: 0;
-        margin: 0;
-        color: #000000 !important;
-    }
-
-    .btn-secondary, .btn {
-        display: none !important;
-    }
-}
-/* ── Dashboard Grid Layout ────────────────────────────────────── */
-.dashboard-grid-2col {
+.stat-grid-3 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
-/* Tinggi chart konsisten */
-.chart-wrapper {
-    height: 280px;
-    position: relative;
-}
-
-/* Empty state center */
-.empty-state {
-    text-align: center;
-    padding: 32px 16px;
-    color: var(--text-muted);
+/* ── Flex & Spacing ─────────────────────────────────────── */
+.flex-between {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
-/* ── Sidebar Overlay (mobile) ─────────────────────────────────── */
-.sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.4);
-    z-index: 150;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
+.mb-4  { margin-bottom: 1rem; }
+.mb-6  { margin-bottom: 1.5rem; }
+.mt-4  { margin-top: 1rem; }
 
-.sidebar-overlay.active {
-    display: block;
-    opacity: 1;
-}
+/* ── Text Colors ────────────────────────────────────────── */
+.text-success { color: var(--success); }
+.text-error   { color: var(--error); }
+.text-primary { color: var(--primary); }
+.text-cyan    { color: var(--cyan); }
+.text-warning { color: var(--warning); }
 
-/* ── Dashboard Responsive ─────────────────────────────────────── */
-@media (max-width: 900px) {
-    .dashboard-grid-2col {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        margin-top: 16px;
-    }
-
-    .chart-wrapper {
-        height: 240px;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Sidebar overlay aktif di mobile */
-    .sidebar.open {
-        box-shadow: 4px 0 32px rgba(15, 23, 42, 0.15);
-    }
-
-    /* Stat grid 2x2 */
-    .stat-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px;
-        margin-bottom: 0;
-    }
-
-    .stat-card-value {
-        font-size: 1.1rem !important;
-    }
-
-    .stat-card-label {
-        font-size: 0.67rem;
-    }
-
-    /* Chart lebih pendek di mobile */
-    .chart-wrapper {
-        height: 200px;
-    }
-
-    /* Tabel: kolom SKU disembunyikan karena udah dipindah ke bawah nama */
-    .glass-card-title span {
-        font-size: 0.88rem;
-    }
-
-    /* Margin top buat declining card */
-    .mt-4 {
-        margin-top: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .stat-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 10px;
-    }
-
-    .stat-card-value {
-        font-size: 1rem !important;
-    }
-
-    .chart-wrapper {
-        height: 180px;
-    }
-
-    .glass-card {
-        padding: 14px;
-    }
-}
-
-/* ── Grid Utilities (Missing Classes) ────────────────────────── */
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.grid-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-}
-
-/* ── Report Filter Form ───────────────────────────────────────── */
+/* ── Report Filter ──────────────────────────────────────── */
 .report-filter-form {
     display: flex;
     align-items: flex-end;
@@ -1609,64 +794,210 @@ select.form-control {
     flex-shrink: 0;
 }
 
-/* ── Stat Card Compact (untuk 3 kolom) ───────────────────────── */
-.stat-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
+/* ── Sidebar Overlay ────────────────────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 150;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
 
-/* ── Text cyan ────────────────────────────────────────────────── */
-.text-cyan {
-    color: var(--cyan);
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
 }
 
-.text-warning {
-    color: var(--warning);
+/* ── Print ──────────────────────────────────────────────── */
+@media print {
+    body * { visibility: hidden; }
+    .receipt-paper, .receipt-paper * { visibility: visible; }
+    .receipt-paper {
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%; max-width: 100%;
+        box-shadow: none; border: none;
+        padding: 0; margin: 0;
+        color: #000000 !important;
+    }
+    .btn-secondary, .btn { display: none !important; }
 }
 
-/* ── Report Responsive ────────────────────────────────────────── */
-@media (max-width: 900px) {
-    .grid-2 {
+/* =========================================================
+   RESPONSIVE — Tablet (≤1024px)
+========================================================= */
+@media (max-width: 1024px) {
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid-2col {
         grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 16px;
     }
 
-    .grid-3 {
-        grid-template-columns: 1fr 1fr;
+    .chart-wrapper { height: 240px; }
+
+    .pos-layout,
+    .pos-container {
+        grid-template-columns: 1fr !important;
     }
 
-    .stat-grid-3 {
-        grid-template-columns: 1fr 1fr;
-    }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+
+    .stat-grid-3 { grid-template-columns: 1fr 1fr; }
 }
 
+/* =========================================================
+   RESPONSIVE — Mobile (≤768px)
+========================================================= */
 @media (max-width: 768px) {
 
-    /* Filter form: stack vertikal */
+    /* === Sidebar === */
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 200;
+        box-shadow: 4px 0 32px rgba(15, 23, 42, 0.12);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 32px rgba(15, 23, 42, 0.15);
+    }
+    .sidebar-overlay { display: block; }
+
+    /* === Main === */
+    .main-wrapper { margin-left: 0; }
+    .mobile-sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+
+    /* === Header === */
+    .main-header {
+        padding: 0 16px;
+        height: 60px;
+        gap: 10px;
+    }
+    .header-title-section h2 { font-size: 1rem; }
+    .user-profile-summary .user-role { display: none; }
+    .user-profile-summary .user-name { font-size: 0.78rem; }
+    .btn-logout span { display: none; }
+    .btn-logout { padding: 8px; }
+
+    /* === Content === */
+    .content-body { padding: 16px; }
+
+    /* === Stat Grid: 2x2 === */
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .stat-card { padding: 14px 14px 14px 18px; }
+
+    .stat-card-value {
+        font-size: clamp(0.88rem, 3.8vw, 1.15rem);
+    }
+
+    .stat-card-label { font-size: 0.65rem; }
+    .stat-card-desc  { font-size: 0.7rem; }
+
+    /* === Dashboard Grid === */
+    .dashboard-grid-2col {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 14px;
+    }
+
+    /* === Glass Card === */
+    .glass-card { padding: 16px; }
+    .glass-card-header {
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+    }
+    .glass-card-title { font-size: 0.9rem; }
+
+    /* === Chart === */
+    .chart-wrapper { height: 200px; }
+
+    /* === Table === */
+    .custom-table {
+        min-width: 520px;
+        font-size: 0.82rem;
+    }
+    .custom-table th,
+    .custom-table td { padding: 10px 12px; }
+    .custom-table .hide-mobile { display: none; }
+
+    /* === Form === */
+    .form-grid { grid-template-columns: 1fr; gap: 0; }
+    .form-control { font-size: 16px; } /* prevent iOS zoom */
+
+    /* === Buttons === */
+    .btn { min-height: 42px; }
+    .btn-sm { width: auto; }
+    .glass-card-header .btn,
+    .glass-card-header .btn-sm,
+    .flex-between .btn-sm { width: auto; }
+
+    /* === Alert === */
+    .alert { font-size: 0.82rem; padding: 12px; }
+
+    /* === Chat === */
+    .chat-container { height: 420px; }
+    .chat-bubble { max-width: 88%; font-size: 0.85rem; }
+
+    /* === POS === */
+    .pos-container,
+    .pos-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px;
+    }
+    .pos-catalog-section { order: 1; }
+    .pos-cart-panel { order: 2; max-height: none; }
+    .pos-products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+        max-height: 380px;
+    }
+    .pos-search-wrapper { width: 100%; margin-top: 8px; }
+    .pos-search-input  { width: 100%; }
+    .pos-category-scroll {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .pos-category-scroll::-webkit-scrollbar { display: none; }
+    .category-btn { white-space: nowrap; flex-shrink: 0; }
+    .product-card { padding: 10px; }
+    .product-image-placeholder { font-size: 1.8rem; }
+    .product-title { font-size: 0.8rem; }
+    .product-price { font-size: 0.9rem; }
+    .cart-header { flex-wrap: wrap; gap: 8px; }
+    .pos-total-row { font-size: 1.05rem; }
+
+    /* === Report Filter === */
     .report-filter-form {
         flex-direction: column;
         align-items: stretch;
     }
-
     .report-filter-inputs {
         flex-direction: column;
         gap: 10px;
     }
+    .report-filter-inputs .form-group { min-width: unset; }
+    .report-filter-actions { justify-content: flex-end; }
+    .report-filter-actions .btn { flex: 1; }
 
-    .report-filter-inputs .form-group {
-        min-width: unset;
-    }
-
-    .report-filter-actions {
-        justify-content: flex-end;
-    }
-
-    .report-filter-actions .btn {
-        flex: 1;
-    }
-
-    /* Grid 2 & 3 jadi 1 kolom */
+    /* === Grid === */
     .grid-2,
     .grid-3 {
         grid-template-columns: 1fr !important;
@@ -1674,93 +1005,94 @@ select.form-control {
     }
 
     .stat-grid-3 {
-        grid-template-columns: 1fr 1fr !important;
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 10px;
         margin-bottom: 16px;
     }
+    .stat-grid-3 .stat-card-value { font-size: clamp(0.88rem, 3.5vw, 1rem); }
+    .stat-grid-3 .stat-card-label { font-size: 0.62rem; }
 
-    /* Stat card value lebih kecil biar muat */
-    .stat-grid-3 .stat-card-value {
-        font-size: 1rem !important;
+    /* === Receipt === */
+    .receipt-paper { max-width: 100%; padding: 16px; }
+
+    /* === Misc === */
+    .mb-6 { margin-bottom: 1rem; }
+    .mt-4 { margin-top: 16px; }
+}
+
+/* =========================================================
+   RESPONSIVE — Small Phone (≤480px)
+========================================================= */
+@media (max-width: 480px) {
+
+    .main-header { padding: 0 12px; height: 56px; }
+    .header-title-section h2 { font-size: 0.88rem; }
+    .user-name { display: none; }
+
+    .content-body { padding: 12px; }
+
+    .glass-card { padding: 14px; border-radius: var(--border-radius-md); }
+
+    /* Stat: tetap 2 kolom tapi lebih compact */
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+    }
+    .stat-card { padding: 12px 12px 12px 16px; }
+    .stat-card-value { font-size: clamp(0.82rem, 4vw, 1rem); }
+    .stat-card-label { font-size: 0.62rem; }
+    .stat-card-desc  { font-size: 0.66rem; }
+
+    .stat-grid-3 {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px;
     }
 
-    .stat-grid-3 .stat-card-label {
-        font-size: 0.65rem;
-    }
+    .chart-wrapper { height: 180px; }
+    .btn { font-size: 0.82rem; }
+    .custom-table { min-width: 480px; }
 
-    /* Form inline (style="display:flex") stack jadi kolom */
-    form[style*="display: flex"],
-    form[style*="display:flex"] {
-        flex-direction: column !important;
-        gap: 12px !important;
-    }
-
-    /* Override: aksi form tetap row */
-    form[style*="display: flex"] > div:last-child,
-    form[style*="display:flex"] > div:last-child {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 8px !important;
-        flex-wrap: wrap;
-    }
-
-    form[style*="display: flex"] > div:last-child .btn,
-    form[style*="display:flex"] > div:last-child .btn {
-        flex: 1;
-    }
-
-    /* Inner flex group di form (tanggal-tanggal) */
-    form div[style*="display: flex"][style*="gap"],
-    form div[style*="display:flex"][style*="gap"] {
-        flex-direction: column !important;
-        gap: 10px !important;
-    }
-
-    /* Tabel: kolom kontribusi/omzet tidak min-width terlalu besar */
-    .custom-table {
-        min-width: 400px;
+    .pos-products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 
-@media (max-width: 480px) {
-    .stat-grid-3 {
+/* =========================================================
+   RESPONSIVE — Very Small (≤400px)
+========================================================= */
+@media (max-width: 400px) {
+    .stat-grid {
         grid-template-columns: 1fr !important;
     }
-
-    .report-filter-actions {
-        flex-direction: column;
-    }
-
-    .report-filter-actions .btn {
-        width: 100%;
-    }
-}
-
-@media (max-width: 400px) {
+    .stat-card-value { font-size: clamp(1.1rem, 5vw, 1.3rem); }
     .pl-kpi-grid { grid-template-columns: 1fr; }
 }
 
+/* =========================================================
+   AI / CHAT WIDGET (≤640px)
+========================================================= */
 @media (max-width: 640px) {
-    /* Override any container padding your layout might add */
     .ai-wrap {
         position: fixed;
         inset: 0;
-        height: 100dvh;          /* dynamic viewport height — accounts for browser chrome */
+        height: 100dvh;
         min-height: 0;
         border-radius: 0;
         border: none;
         box-shadow: none;
         z-index: 10;
     }
-
-    .ai-badge   { display: none; }
-    .ai-header  { padding: 12px 14px; }
-    .ai-messages{ padding: 14px 12px; gap: 12px; }
-    .ai-col     { max-width: 86%; }
-    .ai-bubble  { font-size: 13px; padding: 10px 13px; }
-    .ai-tpl-area{ padding: 8px 12px 4px; }
-    .ai-tpl     { width: 148px; }
-    .ai-input-bar { padding: 8px 12px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
-    .ai-input   { height: 40px; font-size: 13px; }
-    .ai-send    { width: 40px; height: 40px; }
-}   
+    .ai-badge    { display: none; }
+    .ai-header   { padding: 12px 14px; }
+    .ai-messages { padding: 14px 12px; gap: 12px; }
+    .ai-col      { max-width: 86%; }
+    .ai-bubble   { font-size: 13px; padding: 10px 13px; }
+    .ai-tpl-area { padding: 8px 12px 4px; }
+    .ai-tpl      { width: 148px; }
+    .ai-input-bar {
+        padding: 8px 12px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+    .ai-input { height: 40px; font-size: 13px; }
+    .ai-send  { width: 40px; height: 40px; }
+} 
