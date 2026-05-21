@@ -63,6 +63,241 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* =========================================================
+   FINAL MOBILE RESPONSIVE FIX
+========================================================= */
+
+html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+* {
+    min-width: 0;
+}
+
+/* Safe container */
+.content-body,
+.glass-card,
+.main-wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* =========================================================
+   MOBILE FIX
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* ===== HEADER ===== */
+
+    .main-header {
+        height: auto;
+        min-height: 60px;
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .header-title-section {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .header-title-section h2 {
+        font-size: 0.92rem;
+        line-height: 1.2;
+    }
+
+    .header-user-section {
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .user-profile-summary {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        max-width: 120px;
+    }
+
+    .user-name {
+        font-size: 0.75rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .role-badge {
+        font-size: 0.55rem;
+        padding: 2px 6px;
+    }
+
+    /* ===== CONTENT ===== */
+
+    .content-body {
+        padding: 12px;
+    }
+
+    .glass-card {
+        padding: 14px;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    /* ===== FORM ===== */
+
+    .form-group {
+        width: 100%;
+    }
+
+    .form-control {
+        font-size: 16px;
+        /* prevent zoom ios */
+    }
+
+    /* ===== BUTTON ===== */
+
+    .btn {
+        min-height: 42px;
+    }
+
+    /* ===== FILTER FORM ===== */
+
+    .report-filter-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .report-filter-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .report-filter-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .report-filter-actions .btn {
+        width: 100%;
+    }
+
+    /* ===== STAT CARD ===== */
+
+    .stat-grid,
+    .stat-grid-3 {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 14px;
+        min-height: auto;
+    }
+
+    .stat-card-value {
+        font-size: 1.2rem !important;
+        word-break: break-word;
+    }
+
+    .stat-card-desc {
+        font-size: 0.72rem;
+        line-height: 1.4;
+    }
+
+    /* ===== TABLE ===== */
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .custom-table {
+        min-width: 600px;
+    }
+
+    /* ===== CHART ===== */
+
+    .chart-wrapper {
+        height: 220px !important;
+    }
+
+    canvas {
+        max-width: 100% !important;
+    }
+
+    /* ===== GRID ===== */
+
+    .grid-2,
+    .grid-3,
+    .dashboard-grid-2col {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ===== FLEX ===== */
+
+    .flex-between {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex-between .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   SMALL PHONE FIX
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .main-header {
+        padding: 10px 12px;
+    }
+
+    .header-title-section h2 {
+        font-size: 0.82rem;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .content-body {
+        padding: 10px;
+    }
+
+    .glass-card {
+        padding: 12px;
+    }
+
+    .stat-card-value {
+        font-size: 1rem !important;
+    }
+
+    .chart-wrapper {
+        height: 180px !important;
+    }
+
+    .btn {
+        font-size: 0.82rem;
+    }
+
+    .custom-table {
+        min-width: 500px;
+    }
+}
+
 body {
     background: var(--bg-gradient);
     background-attachment: fixed;
@@ -794,25 +1029,353 @@ select.form-control {
 }
 
 /* ── Responsive Design ────────────────────────────────────────── */
+
+/* ─── Tablet (max 1024px) ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+
+    /* Stat grid 2 kolom di tablet */
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Dashboard main grid stack jadi 1 kolom */
+    .content-body > div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* POS layout stack */
+    .pos-layout,
+    .pos-container {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ─── Mobile (max 768px) ──────────────────────────────────────── */
 @media (max-width: 768px) {
+
+    /* === SIDEBAR === */
     .sidebar {
         transform: translateX(-100%);
+        z-index: 200;
+        box-shadow: 4px 0 24px rgba(15, 23, 42, 0.12);
     }
 
     .sidebar.open {
         transform: translateX(0);
     }
 
+    /* Overlay gelap di belakang sidebar saat terbuka */
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.35);
+        z-index: 150;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+    }
+
+    /* === MAIN LAYOUT === */
     .main-wrapper {
         margin-left: 0;
     }
 
     .mobile-sidebar-toggle {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* === HEADER === */
+    .main-header {
+        padding: 0 16px;
+        height: 60px;
+    }
+
+    .header-title-section h2 {
+        font-size: 1rem;
+    }
+
+    /* Sembunyikan nama user & outlet, tampilkan hanya badge role */
+    .user-profile-summary .user-role {
+        display: none;
+    }
+
+    .user-profile-summary .user-name {
+        font-size: 0.8rem;
+    }
+
+    /* Tombol logout: icon saja, sembunyikan teks */
+    .btn-logout span {
+        display: none;
+    }
+
+    .btn-logout {
+        padding: 8px;
+        border-radius: var(--border-radius-sm);
+    }
+
+    /* === CONTENT BODY === */
+    .content-body {
+        padding: 16px;
+    }
+
+    /* === STAT GRID: 2 kolom di mobile === */
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card-value {
+        font-size: 1.15rem !important;
+        letter-spacing: -0.3px;
+    }
+
+    .stat-card-label {
+        font-size: 0.68rem;
+    }
+
+    .stat-card-desc {
+        font-size: 0.72rem;
+    }
+
+    /* === DASHBOARD MAIN GRID: 1 kolom === */
+    .content-body > div[style*="grid-template-columns"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    /* === GLASS CARD === */
+    .glass-card {
+        padding: 16px;
+    }
+
+    .glass-card-header {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+    }
+
+    .glass-card-title {
+        font-size: 0.95rem;
+    }
+
+    /* === FLEX BETWEEN: stack di mobile kalau perlu === */
+    .flex-between {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* === TABEL: scroll horizontal === */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--border-radius-md);
+    }
+
+    .custom-table {
+        min-width: 540px;
+        font-size: 0.82rem;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 10px 12px;
+    }
+
+    /* === FORM GRID: 1 kolom === */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0;
+    }
+
+    /* Filter form stack */
+    .glass-card > form[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* === TOMBOL: full width di mobile === */
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-sm {
+        width: auto;
+    }
+
+    /* Header card action button tetap normal */
+    .glass-card-header .btn,
+    .glass-card-header .btn-sm,
+    .flex-between .btn,
+    .flex-between .btn-sm {
+        width: auto;
+    }
+
+    /* === ALERT === */
+    .alert {
+        font-size: 0.82rem;
+        padding: 12px;
+    }
+
+    /* === CHAT === */
+    .chat-container {
+        height: 420px;
+    }
+
+    .chat-bubble {
+        max-width: 88%;
+        font-size: 0.85rem;
+    }
+
+    /* === POS KASIR === */
+    .pos-container,
+    .pos-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px;
+    }
+
+    .pos-catalog-section {
+        order: 1;
+    }
+
+    .pos-cart-panel {
+        order: 2;
+        max-height: none;
+    }
+
+    .pos-products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+        max-height: 380px;
+    }
+
+    .pos-search-wrapper {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .pos-search-input {
+        width: 100%;
+    }
+
+    /* Category scroll tetap horizontal */
+    .pos-category-scroll {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .pos-category-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .category-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Product card di POS lebih compact */
+    .product-card {
+        padding: 10px;
+    }
+
+    .product-image-placeholder {
+        font-size: 1.8rem;
+    }
+
+    .product-title {
+        font-size: 0.8rem;
+    }
+
+    .product-price {
+        font-size: 0.9rem;
+    }
+
+    /* Cart panel */
+    .cart-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pos-total-row {
+        font-size: 1.1rem;
+    }
+
+    /* === RECEIPT === */
+    .receipt-paper {
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    /* === MB UTILS === */
+    .mb-6 {
+        margin-bottom: 1rem;
+    }
+
+    /* === HIDE COLS DI TABEL === */
+    /* Sembunyikan kolom yang kurang penting di mobile */
+    .custom-table .hide-mobile {
+        display: none;
+    }
+}
+
+/* ─── HP Kecil (max 480px) ─────────────────────────────────────── */
+@media (max-width: 480px) {
+
+    /* Stat 1 kolom di HP kecil */
+    .stat-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 16px;
+    }
+
+    .stat-card::after {
+        width: 100%;
+        height: 3px;
+        top: auto;
+        bottom: 0;
+        left: 0;
+    }
+
+    .stat-card-value {
+        font-size: 1.3rem !important;
+        margin-bottom: 0;
+    }
+
+    .stat-card-label {
+        margin-bottom: 2px;
+    }
+
+    .header-title-section h2 {
+        font-size: 0.9rem;
+    }
+
+    /* POS produk 1 kolom di HP kecil */
+    .pos-products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .glass-card {
+        padding: 14px;
+        border-radius: var(--border-radius-md);
     }
 
     .content-body {
-        padding: 16px;
+        padding: 12px;
     }
 }
 
@@ -895,3 +1458,309 @@ select.form-control {
         display: none !important;
     }
 }
+/* ── Dashboard Grid Layout ────────────────────────────────────── */
+.dashboard-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+/* Tinggi chart konsisten */
+.chart-wrapper {
+    height: 280px;
+    position: relative;
+}
+
+/* Empty state center */
+.empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ── Sidebar Overlay (mobile) ─────────────────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 150;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ── Dashboard Responsive ─────────────────────────────────────── */
+@media (max-width: 900px) {
+    .dashboard-grid-2col {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .chart-wrapper {
+        height: 240px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Sidebar overlay aktif di mobile */
+    .sidebar.open {
+        box-shadow: 4px 0 32px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Stat grid 2x2 */
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px;
+        margin-bottom: 0;
+    }
+
+    .stat-card-value {
+        font-size: 1.1rem !important;
+    }
+
+    .stat-card-label {
+        font-size: 0.67rem;
+    }
+
+    /* Chart lebih pendek di mobile */
+    .chart-wrapper {
+        height: 200px;
+    }
+
+    /* Tabel: kolom SKU disembunyikan karena udah dipindah ke bawah nama */
+    .glass-card-title span {
+        font-size: 0.88rem;
+    }
+
+    /* Margin top buat declining card */
+    .mt-4 {
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px;
+    }
+
+    .stat-card-value {
+        font-size: 1rem !important;
+    }
+
+    .chart-wrapper {
+        height: 180px;
+    }
+
+    .glass-card {
+        padding: 14px;
+    }
+}
+
+/* ── Grid Utilities (Missing Classes) ────────────────────────── */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+/* ── Report Filter Form ───────────────────────────────────────── */
+.report-filter-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.report-filter-inputs {
+    display: flex;
+    gap: 16px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.report-filter-inputs .form-group {
+    flex: 1;
+    min-width: 140px;
+    margin-bottom: 0;
+}
+
+.report-filter-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ── Stat Card Compact (untuk 3 kolom) ───────────────────────── */
+.stat-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+/* ── Text cyan ────────────────────────────────────────────────── */
+.text-cyan {
+    color: var(--cyan);
+}
+
+.text-warning {
+    color: var(--warning);
+}
+
+/* ── Report Responsive ────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-3 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-grid-3 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Filter form: stack vertikal */
+    .report-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .report-filter-inputs {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .report-filter-inputs .form-group {
+        min-width: unset;
+    }
+
+    .report-filter-actions {
+        justify-content: flex-end;
+    }
+
+    .report-filter-actions .btn {
+        flex: 1;
+    }
+
+    /* Grid 2 & 3 jadi 1 kolom */
+    .grid-2,
+    .grid-3 {
+        grid-template-columns: 1fr !important;
+        gap: 14px;
+    }
+
+    .stat-grid-3 {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    /* Stat card value lebih kecil biar muat */
+    .stat-grid-3 .stat-card-value {
+        font-size: 1rem !important;
+    }
+
+    .stat-grid-3 .stat-card-label {
+        font-size: 0.65rem;
+    }
+
+    /* Form inline (style="display:flex") stack jadi kolom */
+    form[style*="display: flex"],
+    form[style*="display:flex"] {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* Override: aksi form tetap row */
+    form[style*="display: flex"] > div:last-child,
+    form[style*="display:flex"] > div:last-child {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        flex-wrap: wrap;
+    }
+
+    form[style*="display: flex"] > div:last-child .btn,
+    form[style*="display:flex"] > div:last-child .btn {
+        flex: 1;
+    }
+
+    /* Inner flex group di form (tanggal-tanggal) */
+    form div[style*="display: flex"][style*="gap"],
+    form div[style*="display:flex"][style*="gap"] {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    /* Tabel: kolom kontribusi/omzet tidak min-width terlalu besar */
+    .custom-table {
+        min-width: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .report-filter-actions {
+        flex-direction: column;
+    }
+
+    .report-filter-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .pl-kpi-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    /* Override any container padding your layout might add */
+    .ai-wrap {
+        position: fixed;
+        inset: 0;
+        height: 100dvh;          /* dynamic viewport height — accounts for browser chrome */
+        min-height: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        z-index: 10;
+    }
+
+    .ai-badge   { display: none; }
+    .ai-header  { padding: 12px 14px; }
+    .ai-messages{ padding: 14px 12px; gap: 12px; }
+    .ai-col     { max-width: 86%; }
+    .ai-bubble  { font-size: 13px; padding: 10px 13px; }
+    .ai-tpl-area{ padding: 8px 12px 4px; }
+    .ai-tpl     { width: 148px; }
+    .ai-input-bar { padding: 8px 12px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+    .ai-input   { height: 40px; font-size: 13px; }
+    .ai-send    { width: 40px; height: 40px; }
+}   

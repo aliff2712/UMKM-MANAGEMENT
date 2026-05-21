@@ -51,8 +51,8 @@
                             @foreach($topProducts as $p)
                                 <tr>
                                     <td><strong>{{ $p->name }}</strong></td>
-                                    <td class="text-right"><strong>{{ $p->total_qty }}</strong> <small>{{ $p->unit }}</small></td>
-                                    <td class="text-right text-cyan">Rp {{ number_format($p->total_sales, 0, ',', '.') }}</td>
+                                    <td class="text-right"><strong>{{ $p->total_sold }}</strong> <small>{{ $p->unit }}</small></td>
+                                    <td class="text-right text-cyan">Rp {{ number_format($p->total_revenue, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

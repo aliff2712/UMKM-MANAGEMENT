@@ -116,7 +116,7 @@
                         <a href="{{ route('transactions.index') }}" class="menu-item {{ Request::routeIs('transactions.index') || Request::routeIs('transactions.show') ? 'active' : '' }}">
                             <i data-lucide="history"></i>
                             <span>Riwayat Transaksi</span>
-                        </a>
+                        </a>    
                     </div>
                 @endif
                 

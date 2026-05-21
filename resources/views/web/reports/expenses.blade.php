@@ -31,13 +31,13 @@
     <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
         <div class="glass-card stat-card error" style="flex: 1;">
             <div class="stat-card-label">Total Nominal Pengeluaran</div>
-            <div class="stat-card-value text-error">Rp {{ number_format($summary['total_expenses'] ?? 0, 0, ',', '.') }}</div>
+            <div class="stat-card-value text-error">Rp {{ number_format($summary['total_amount'] ?? 0, 0, ',', '.') }}</div>
             <div class="stat-card-desc">Total belanja operasional outlet</div>
         </div>
 
         <div class="glass-card stat-card warning" style="flex: 1;">
             <div class="stat-card-label">Jumlah Pencatatan (Kuitansi)</div>
-            <div class="stat-card-value text-warning">{{ number_format($summary['transaction_count'] ?? 0, 0, ',', '.') }}</div>
+            <div class="stat-card-value text-warning">{{ number_format($summary['total_records'] ?? 0, 0, ',', '.') }}</div>
             <div class="stat-card-desc">Total nota pengeluaran terekam</div>
         </div>
     </div>
@@ -69,18 +69,18 @@
                     </thead>
                     <tbody>
                         @php
-                            $grandTotalExpenses = $summary['total_expenses'] ?: 1;
+                            $grandTotalExpenses = $summary['total_amount'] ?: 1;
                         @endphp
                         @foreach($byCategory as $catName => $data)
                             @php
-                                $catContribution = ($data['amount'] / $grandTotalExpenses) * 100;
+                                $catContribution = ($data['total'] / $grandTotalExpenses) * 100;
                             @endphp
                             <tr>
                                 <td><strong>{{ $catName }}</strong></td>
                                 <td class="text-right"><strong>{{ $data['count'] }}</strong> kali</td>
                                 <td class="text-right">
                                     <div style="text-align: right; margin-bottom: 4px;">
-                                        <strong class="text-error">Rp {{ number_format($data['amount'], 0, ',', '.') }}</strong>
+                                        <strong class="text-error">Rp {{ number_format($data['total'], 0, ',', '.') }}</strong>
                                         <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 4px;">({{ number_format($catContribution, 1) }}%)</span>
                                     </div>
                                     <!-- progress bar -->
