@@ -139,34 +139,7 @@
                 </button>
             </form>
 
-            <!-- Quick Login Section -->
-            <div class="mt-8 text-center"
-                 x-show="isLoaded"
-                 x-transition:enter="transition ease-out duration-700 delay-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100">
-                <p class="text-xs text-gray-400 font-medium tracking-wide mb-3">Demo Login Cepat:</p>
-                <div class="flex justify-center gap-2">
-                    <button 
-                        @click="quickLogin('kasir@toko.com', 'password')"
-                        class="px-5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold rounded-lg transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-                    >
-                        Kasir
-                    </button>
-                    <button 
-                        @click="quickLogin('admin@toko.com', 'password')"
-                        class="px-5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-600 text-xs font-semibold rounded-lg transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-                    >
-                        Admin
-                    </button>
-                    <button 
-                        @click="quickLogin('owner@toko.com', 'password')"
-                        class="px-5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-600 text-xs font-semibold rounded-lg transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-                    >
-                        Owner
-                    </button>
-                </div>
-            </div>
+
 
         </div>
     </div>
