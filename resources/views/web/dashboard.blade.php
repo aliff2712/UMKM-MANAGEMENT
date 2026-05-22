@@ -5,9 +5,7 @@
 
 @section('content')
 
-<!-- ========================= -->
-<!-- STAT GRID                 -->
-<!-- ========================= -->
+<!-- STAT GRID -->
 <div class="stat-grid">
 
     <div class="glass-card stat-card cyan">
@@ -57,15 +55,13 @@
 
 </div>
 
-<!-- ========================= -->
-<!-- CHARTS ROW                -->
-<!-- ========================= -->
+<!-- CHARTS ROW -->
 <div class="dashboard-grid-2col">
 
     <div class="glass-card">
         <div class="glass-card-header">
             <h3 class="glass-card-title text-primary">
-                <i data-lucide="line-chart"></i>
+                <i data-lucide="bar-chart-2"></i>
                 <span>Produk Terlaris (Qty Terjual)</span>
             </h3>
         </div>
@@ -88,9 +84,7 @@
 
 </div>
 
-<!-- ========================= -->
-<!-- TABLES ROW                -->
-<!-- ========================= -->
+<!-- TABLES ROW -->
 <div class="dashboard-grid-2col">
 
     <!-- Barang Menipis -->
@@ -100,9 +94,7 @@
                 <i data-lucide="alert-triangle"></i>
                 <span>Barang Menipis</span>
             </h3>
-            <a href="{{ route('stock.index') }}" class="btn btn-secondary btn-sm">
-                Kelola Stok
-            </a>
+            <a href="{{ route('stock.index') }}" class="btn btn-secondary btn-sm">Kelola Stok</a>
         </div>
 
         @if($lowStockProducts->isEmpty())
@@ -194,9 +186,7 @@
 
 </div>
 
-<!-- ========================= -->
-<!-- DECLINING PRODUCTS        -->
-<!-- ========================= -->
+<!-- DECLINING PRODUCTS -->
 @if(auth()->user()->role === 'owner' && !$decliningProducts->isEmpty())
 <div class="glass-card mt-4">
     <div class="glass-card-header">
@@ -223,7 +213,7 @@
                     <td class="text-right">{{ $dp['last_qty'] }}</td>
                     <td class="text-right"><strong>{{ $dp['current_qty'] }}</strong></td>
                     <td class="text-right text-error" style="font-weight:700;">
-                        -{{ number_format($dp['decline_percent  '], 1) }}%
+                        -{{ number_format($dp['decline_percent'], 1) }}%
                     </td>
                 </tr>
                 @endforeach
@@ -235,102 +225,114 @@
 
 @endsection
 
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function () {
 
     const topProductsLabels = [
-        @foreach($topProducts as $p) "{{ $p->name }}", @endforeach
+        @foreach($topProducts as $p) "{{ addslashes($p->name) }}", @endforeach
     ];
     const topProductsSales = [
-        @foreach($topProducts as $p) {{ $p->total_sold }}, @endforeach
+        @foreach($topProducts as $p) {{ (int) $p->total_sold }}, @endforeach
     ];
     const lowStockLabels = [
-        @foreach($lowStockProducts as $product) "{{ $product->name }}", @endforeach
+        @foreach($lowStockProducts as $product) "{{ addslashes($product->name) }}", @endforeach
     ];
-    const lowStockData = [
-        @foreach($lowStockProducts as $product) {{ $product->stock_qty }}, @endforeach
+    const lowStockRealData = [
+        @foreach($lowStockProducts as $product) {{ (int) $product->stock_qty }}, @endforeach
     ];
 
-    // Sales Trend Chart → sekarang: Produk Terlaris by Qty
-    new Chart(document.getElementById('salesTrendChart'), {
-        type: 'bar',
-        data: {
-            labels: topProductsLabels,
-            datasets: [{
-                label: 'Qty Terjual',
-                data: topProductsSales,
-                backgroundColor: ['#06b6d4','#8b5cf6','#10b981','#f59e0b','#ef4444'],
-                borderRadius: 10,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { labels: { color: '#64748b', font: { size: 11 } } },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => ` ${ctx.parsed.y} pcs terjual`
-                    }
-                }
+    // ── Bar Chart: Produk Terlaris ──
+    const salesCanvas = document.getElementById('salesTrendChart');
+    if (salesCanvas) {
+        new Chart(salesCanvas, {
+            type: 'bar',
+            data: {
+                labels: topProductsLabels,
+                datasets: [{
+                    label: 'Qty Terjual',
+                    data: topProductsSales,
+                    backgroundColor: ['#06b6d4','#8b5cf6','#10b981','#f59e0b','#ef4444'],
+                    borderRadius: 10,
+                    borderSkipped: false
+                }]
             },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#94a3b8',
-                        font: { size: 10 },
-                        maxRotation: 30,
-                        callback: function(val, i) {
-                            // Potong label panjang biar gak overflow
-                            const label = this.getLabelForValue(val);
-                            return label.length > 12 ? label.slice(0, 12) + '…' : label;
-                        }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#64748b', font: { size: 11 } } },
+                    tooltip: {
+                        callbacks: { label: ctx => ` ${ctx.parsed.y} pcs terjual` }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#94a3b8', font: { size: 10 }, maxRotation: 30,
+                            callback: function(val) {
+                                const label = this.getLabelForValue(val);
+                                return label.length > 12 ? label.slice(0, 12) + '…' : label;
+                            }
+                        },
+                        grid: { display: false }
                     },
-                    grid: { display: false }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: { color: '#94a3b8', font: { size: 10 }, stepSize: 1 },
-                    grid: { color: 'rgba(148,163,184,0.1)' }
-                }
-            }
-        }
-    });
-
-    // Payment Chart → sekarang: Stok Menipis by Qty
-    new Chart(document.getElementById('paymentChart'), {
-        type: 'doughnut',
-        data: {
-            labels: lowStockLabels.length ? lowStockLabels : ['Semua Stok Aman'],
-            datasets: [{
-                data: lowStockData.length ? lowStockData : [1],
-                backgroundColor: lowStockData.length
-                    ? ['#ef4444','#f59e0b','#8b5cf6','#06b6d4','#10b981']
-                    : ['#e2e8f0'],
-                borderWidth: 0,
-                hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#64748b', padding: 14, font: { size: 11 } }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => ` Sisa stok: ${ctx.parsed} pcs`
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8', font: { size: 10 }, stepSize: 1 },
+                        grid: { color: 'rgba(148,163,184,0.1)' }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
+    // ── Doughnut Chart: Stok Menipis ──
+    // Masalah: Chart.js skip nilai 0 di doughnut → chart kosong
+    // Fix: ganti nilai 0 → 1 untuk rendering, tooltip tetap tampilkan nilai asli
+    const stockCanvas = document.getElementById('paymentChart');
+    if (stockCanvas) {
+        const hasStock = lowStockLabels.length > 0;
+        const chartLabels  = hasStock ? lowStockLabels : ['Semua Stok Aman'];
+        const chartData    = hasStock ? lowStockRealData.map(v => v === 0 ? 1 : v) : [1];
+        const chartColors  = hasStock
+            ? ['#ef4444','#f59e0b','#8b5cf6','#06b6d4','#10b981']
+            : ['#e2e8f0'];
+
+        new Chart(stockCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    data: chartData,
+                    backgroundColor: chartColors,
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#64748b', padding: 12, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                const real = lowStockRealData[ctx.dataIndex] ?? 0;
+                                return ` Sisa stok: ${real} pcs`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+});
 </script>
 @endpush
