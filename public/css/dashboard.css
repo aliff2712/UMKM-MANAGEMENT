@@ -1095,4 +1095,87 @@ select.form-control {
     }
     .ai-input { height: 40px; font-size: 13px; }
     .ai-send  { width: 40px; height: 40px; }
-} 
+}
+
+/* =========================================================
+   UMORA — Custom Pagination
+========================================================= */
+.umora-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.umora-pagination-list {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.umora-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: #ffffff;
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.umora-page-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: #eff6ff;
+}
+
+.umora-page-item.active .umora-page-btn,
+.umora-page-btn.umora-page-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    cursor: default;
+    font-weight: 700;
+    box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.umora-page-item.disabled .umora-page-btn {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.umora-page-ellipsis {
+    letter-spacing: 0.1em;
+    border-color: transparent;
+    background: transparent;
+}
+
+.pagination-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+    .pagination-wrapper { flex-direction: column; align-items: flex-start; }
+    .umora-pagination    { width: 100%; justify-content: flex-start; }
+    .umora-page-btn      { min-width: 32px; height: 32px; font-size: 0.78rem; }
+}
