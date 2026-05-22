@@ -248,5 +248,4 @@ Accept: application/json
 
 <p align="center">
   <strong>Umora — Empowering Indonesian MSMEs to Scale Up Digitally</strong><br>
-  Built with ❤️ for a better business ecosystem.
 </p>
