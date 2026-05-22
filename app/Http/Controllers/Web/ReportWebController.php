@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Exports\ExpenseReportExport;
+use App\Exports\ProfitLossReportExport;
+use App\Exports\SalesReportExport;
 use App\Http\Controllers\Controller;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * ReportWebController — halaman laporan bisnis berbasis periode untuk Blade.
+ * ReportWebController — Halaman laporan bisnis berbasis periode untuk Blade.
  */
 class ReportWebController extends Controller
 {
@@ -61,10 +65,10 @@ class ReportWebController extends Controller
         $startDate = $request->get('start_date', now()->startOfMonth()->toDateString());
         $endDate   = $request->get('end_date', now()->toDateString());
 
-        $report         = $this->reportService->getExpenseReport($outletId, $startDate, $endDate);
-        $summary        = $report['summary'];
-        $byCategory     = $report['by_category'];
-        $dailyExpenses  = $report['daily_expenses'];
+        $report        = $this->reportService->getExpenseReport($outletId, $startDate, $endDate);
+        $summary       = $report['summary'];
+        $byCategory    = $report['by_category'];
+        $dailyExpenses = $report['daily_expenses'];
 
         return view('web.reports.expenses', compact(
             'startDate',
@@ -90,17 +94,15 @@ class ReportWebController extends Controller
         $month    = $request->get('month', now()->format('m'));
         $year     = $request->get('year', now()->format('Y'));
 
-        $report     = $this->reportService->getProfitLossReport($outletId, $month, $year);
-
-        // Ekstrak variabel agar lebih mudah di Blade
-        $income     = $report['income'];
-        $cogs       = $report['cogs'];
+        $report      = $this->reportService->getProfitLossReport($outletId, $month, $year);
+        $income      = $report['income'];
+        $cogs        = $report['cogs'];
         $grossProfit = $report['gross_profit'];
         $grossMargin = $report['gross_margin'];
-        $expenses   = $report['expenses'];
-        $netProfit  = $report['net_profit'];
-        $netMargin  = $report['net_margin'];
-        $status     = $report['status']; // 'profit' atau 'loss'
+        $expenses    = $report['expenses'];
+        $netProfit   = $report['net_profit'];
+        $netMargin   = $report['net_margin'];
+        $status      = $report['status'];
 
         return view('web.reports.profit_loss', compact(
             'month',
@@ -114,5 +116,75 @@ class ReportWebController extends Controller
             'netMargin',
             'status'
         ));
+    }
+
+    /**
+     * POST /reports/sales/export
+     * Ekspor laporan penjualan ke format Excel.
+     */
+    public function exportSalesReport(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date'   => ['required', 'date', 'after_or_equal:start_date'],
+        ]);
+
+        $outletId = auth()->user()->outlet_id;
+        $data     = $this->reportService->getSalesReport($outletId, $request->start_date, $request->end_date);
+        $filename = "Laporan-Penjualan-{$request->start_date}-{$request->end_date}-Outlet{$outletId}.xlsx";
+
+        return (new SalesReportExport(
+            $data,
+            $request->start_date,
+            $request->end_date,
+            $outletId
+        ))->download($filename);
+    }
+
+    /**
+     * POST /reports/expenses/export
+     * Ekspor laporan pengeluaran ke format Excel.
+     */
+    public function exportExpenseReport(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'start_date' => ['required', 'date'],
+            'end_date'   => ['required', 'date', 'after_or_equal:start_date'],
+        ]);
+
+        $outletId = auth()->user()->outlet_id;
+        $data     = $this->reportService->getExpenseReport($outletId, $request->start_date, $request->end_date);
+        $filename = "Laporan-Pengeluaran-{$request->start_date}-{$request->end_date}-Outlet{$outletId}.xlsx";
+
+        return (new ExpenseReportExport(
+            $data,
+            $request->start_date,
+            $request->end_date,
+            $outletId
+        ))->download($filename);
+    }
+
+    /**
+     * POST /reports/profit-loss/export
+     * Ekspor laporan laba rugi ke format Excel.
+     */
+    public function exportProfitLossReport(Request $request): BinaryFileResponse
+    {
+        $request->validate([
+            'month' => ['required', 'integer', 'between:1,12'],
+            'year'  => ['required', 'integer', 'min:2000'],
+        ]);
+
+        $outletId = auth()->user()->outlet_id;
+        $month    = str_pad($request->month, 2, '0', STR_PAD_LEFT);
+        $data     = $this->reportService->getProfitLossReport($outletId, $month, $request->year);
+        $filename = "Laporan-Laba-Rugi-{$request->year}-{$month}-Outlet{$outletId}.xlsx";
+
+        return (new ProfitLossReportExport(
+            $data,
+            $month,
+            $request->year,
+            $outletId
+        ))->download($filename);
     }
 }

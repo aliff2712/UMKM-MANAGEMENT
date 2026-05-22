@@ -9,13 +9,13 @@
 
 {{-- ── Period Filter ────────────────────────────────────────────────── --}}
 <div class="pl-filter-card">
-    <form action="{{ route('reports.profit-loss') }}" method="GET" class="pl-filter-form">
+    <form action="{{ route('reports.profit-loss') }}" method="GET" class="pl-filter-form" id="filter-form">
         <div class="pl-filter-fields">
             <div class="pl-field">
                 <label class="pl-label" for="month">Bulan</label>
                 <select name="month" id="month" class="pl-select">
                     @for($m = 1; $m <= 12; $m++)
-                        <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                        <option value="{{ sprintf('%02d', $m) }}" {{ $month == sprintf('%02d', $m) ? 'selected' : '' }}>
                             {{ \Carbon\Carbon::create(null, $m, 1)->translatedFormat('F') }}
                         </option>
                     @endfor
@@ -35,11 +35,26 @@
                 <i data-lucide="filter" style="width:15px;height:15px;"></i>
                 Terapkan
             </button>
+            <button type="button" class="pl-btn-success" onclick="exportReport('csv')">
+                <i data-lucide="download" style="width:15px;height:15px;"></i>
+                Ekspor CSV
+            </button>
+            <button type="button" class="pl-btn-info" onclick="exportReport('excel')">
+                <i data-lucide="file-text" style="width:15px;height:15px;"></i>
+                Ekspor Excel
+            </button>
             <a href="{{ route('dashboard') }}" class="pl-btn-ghost">
                 <i data-lucide="arrow-left" style="width:15px;height:15px;"></i>
                 Kembali
             </a>
         </div>
+    </form>
+
+    <form id="export-form" action="{{ route('reports.profit-loss.export') }}" method="POST" style="display: none;">
+        @csrf
+        <input type="hidden" name="month" value="{{ $month }}">
+        <input type="hidden" name="year" value="{{ $year }}">
+        <input type="hidden" name="format" id="export-format" value="csv">
     </form>
 </div>
 
@@ -267,6 +282,32 @@
 }
 .pl-btn-ghost:hover { background: var(--glass-bg,#fff); border-color: #9ca3af; }
 
+.pl-btn-success {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 38px; padding: 0 16px;
+    background: linear-gradient(135deg,#10b981,#34d399);
+    color: #fff; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: box-shadow .15s, transform .1s;
+    box-shadow: 0 3px 12px rgba(16,185,129,.3);
+    font-family: inherit;
+}
+.pl-btn-success:hover  { box-shadow: 0 5px 18px rgba(16,185,129,.4); transform: translateY(-1px); }
+.pl-btn-success:active { transform: scale(.97); }
+
+.pl-btn-info {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 38px; padding: 0 16px;
+    background: linear-gradient(135deg,#3b82f6,#60a5fa);
+    color: #fff; border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: box-shadow .15s, transform .1s;
+    box-shadow: 0 3px 12px rgba(59,130,246,.3);
+    font-family: inherit;
+}
+.pl-btn-info:hover  { box-shadow: 0 5px 18px rgba(59,130,246,.4); transform: translateY(-1px); }
+.pl-btn-info:active { transform: scale(.97); }
+
 /* ── KPI Grid ───────────────────────────────────────────────────────── */
 .pl-kpi-grid {
     display: grid;
@@ -461,4 +502,18 @@
 
 
 </style>
+
+<script>
+function exportReport(format) {
+    const form = document.getElementById('export-form');
+    const month = document.getElementById('month').value;
+    const year = document.getElementById('year').value;
+    
+    form.querySelector('input[name="month"]').value = month;
+    form.querySelector('input[name="year"]').value = year;
+    form.querySelector('#export-format').value = format;
+    
+    form.submit();
+}
+</script>
 @endsection

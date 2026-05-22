@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
 
         // === PROFIT & LOSS REPORT ===
         Route::get('reports/profit-loss', [ReportWebController::class, 'profitLoss'])->name('reports.profit-loss');
+        Route::post('reports/profit-loss/export', [ReportWebController::class, 'exportProfitLossReport'])->name('reports.profit-loss.export');
     });
 
     // =========================================================
@@ -86,7 +87,9 @@ Route::middleware(['auth'])->group(function () {
         // === OPERATIONAL REPORTS ===
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/sales',    [ReportWebController::class, 'sales'])->name('sales');
+            Route::post('/sales/export', [ReportWebController::class, 'exportSalesReport'])->name('sales.export');
             Route::get('/expenses', [ReportWebController::class, 'expenses'])->name('expenses');
+            Route::post('/expenses/export', [ReportWebController::class, 'exportExpenseReport'])->name('expenses.export');
         });
     });
 

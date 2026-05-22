@@ -7,7 +7,7 @@
 <!-- Filter Date Period Form -->
 {{-- Form filter — ganti yang lama --}}
 <div class="glass-card mb-6">
-    <form action="{{ route('reports.expenses') }}" method="GET" class="report-filter-form">
+    <form action="{{ route('reports.expenses') }}" method="GET" class="report-filter-form" id="filter-form">
         <div class="report-filter-inputs">
             <div class="form-group">
                 <label class="form-label" for="start_date">Dari Tanggal</label>
@@ -23,8 +23,23 @@
                 <i data-lucide="filter"></i>
                 <span>Terapkan Filter</span>
             </button>
+            <button type="button" class="btn btn-success" onclick="exportReport('csv')">
+                <i data-lucide="download"></i>
+                <span>Ekspor CSV</span>
+            </button>
+            <button type="button" class="btn btn-info" onclick="exportReport('excel')">
+                <i data-lucide="file-text"></i>
+                <span>Ekspor Excel</span>
+            </button>
             <a href="{{ route('dashboard') }}" class="btn btn-secondary">Kembali</a>
         </div>
+    </form>
+
+    <form id="export-form" action="{{ route('reports.expenses.export') }}" method="POST" style="display: none;">
+        @csrf
+        <input type="hidden" name="start_date" value="{{ $startDate }}">
+        <input type="hidden" name="end_date" value="{{ $endDate }}">
+        <input type="hidden" name="format" id="export-format" value="csv">
     </form>
 </div>
 
@@ -98,4 +113,18 @@
     </div>
     @endif
 </div>
+
+<script>
+function exportReport(format) {
+    const form = document.getElementById('export-form');
+    const startDate = document.getElementById('start_date').value;
+    const endDate = document.getElementById('end_date').value;
+    
+    form.querySelector('input[name="start_date"]').value = startDate;
+    form.querySelector('input[name="end_date"]').value = endDate;
+    form.querySelector('#export-format').value = format;
+    
+    form.submit();
+}
+</script>
 @endsection

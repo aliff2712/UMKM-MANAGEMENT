@@ -118,6 +118,7 @@ Route::prefix('v1')->group(function () {
 
             // === PROFIT & LOSS REPORT ===
             Route::get('reports/profit-loss', [ReportController::class, 'profitLoss']); // [CORE] Laba bersih
+            Route::get('reports/profit-loss/export', [ReportController::class, 'exportProfitLossReport']); // Export P&L
         });
 
         // =========================================================
@@ -142,7 +143,9 @@ Route::prefix('v1')->group(function () {
             // === OPERATIONAL REPORTS ===
             Route::prefix('reports')->group(function () {
                 Route::get('/sales', [ReportController::class, 'sales']);
+                Route::get('/sales/export', [ReportController::class, 'exportSalesReport']); // Export Sales
                 Route::get('/expenses', [ReportController::class, 'expenses']);
+                Route::get('/expenses/export', [ReportController::class, 'exportExpenseReport']); // Export Expenses
             });
         });
 
