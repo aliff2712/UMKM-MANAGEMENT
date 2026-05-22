@@ -1,12 +1,12 @@
-# 🏪 Panduan Arsitektur & Logika Backend TechneFest
+# 🏪 Panduan Arsitektur & Logika Backend Umora
 
-Dokumen ini menjelaskan seluruh arsitektur backend, struktur database, skema ERD, model Eloquent, controller, hingga logika bisnis inti (*core business logic*) pada Service Layer platform TechneFest.
+Dokumen ini menjelaskan seluruh arsitektur backend, struktur database, skema ERD, model Eloquent, controller, hingga logika bisnis inti (*core business logic*) pada Service Layer platform Umora.
 
 ---
 
 ## 🏗️ 1. Gambaran Umum Arsitektur (Multi-Tenant & Layered)
 
-Platform TechneFest dibangun dengan pendekatan arsitektur berlapis (*layered architecture*) yang memisahkan tanggung jawab data, logika bisnis, dan presentasi:
+Platform Umora dibangun dengan pendekatan arsitektur berlapis (*layered architecture*) yang memisahkan tanggung jawab data, logika bisnis, dan presentasi:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

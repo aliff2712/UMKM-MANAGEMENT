@@ -69,7 +69,7 @@ class DatabaseBackupTelegram extends Command
             $file = fopen($sqlPath, 'w');
             
             // Tulis header awal file SQL
-            fwrite($file, "-- TechneFest Auto-Backup Database\n");
+            fwrite($file, "-- Umora Auto-Backup Database\n");
             fwrite($file, "-- Dibuat tanggal: " . now()->toDateTimeString() . "\n\n");
             fwrite($file, "SET FOREIGN_KEY_CHECKS=0;\n\n");
 

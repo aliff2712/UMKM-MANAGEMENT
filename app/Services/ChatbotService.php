@@ -232,7 +232,7 @@ class ChatbotService
             $waktu = 'malam';
         }
 
-        $answer = "Halo! Selamat {$waktu}! 👋 Saya adalah asisten bisnis TechneFest. Saya siap membantu Anda menganalisis data outlet secara real-time.\n\nBerikut hal yang bisa saya bantu:\n• 📦 Produk terlaris atau mengalami penurunan\n• ⚠️ Stok produk yang menipis atau habis\n• 💰 Total pendapatan & pengeluaran bulan ini\n• 📊 Analisis untung/rugi usaha Anda\n\nSilakan tanyakan sesuatu atau klik kartu pertanyaan di bawah!";
+        $answer = "Halo! Selamat {$waktu}! 👋 Saya adalah asisten bisnis Umora. Saya siap membantu Anda menganalisis data outlet secara real-time.\n\nBerikut hal yang bisa saya bantu:\n• 📦 Produk terlaris atau mengalami penurunan\n• ⚠️ Stok produk yang menipis atau habis\n• 💰 Total pendapatan & pengeluaran bulan ini\n• 📊 Analisis untung/rugi usaha Anda\n\nSilakan tanyakan sesuatu atau klik kartu pertanyaan di bawah!";
 
         return [
             'question' => $question,
@@ -493,7 +493,7 @@ class ChatbotService
         $monthName = now()->translatedFormat('F Y');
 
         // 2. Susun System Prompt / Context untuk memberikan intelijen bisnis
-        $prompt = "Anda adalah asisten AI bisnis pintar bernama TechneFest. Anda membantu pemilik toko UMKM menganalisis bisnis mereka berdasarkan ringkasan data outlet real-time berikut ini:
+        $prompt = "Anda adalah asisten AI bisnis pintar bernama Umora. Anda membantu pemilik toko UMKM menganalisis bisnis mereka berdasarkan ringkasan data outlet real-time berikut ini:
 - Total produk di toko saat ini: {$totalProducts} barang
 - Jumlah produk dengan stok rendah/kritis (perlu restock segera): {$lowStockCount} barang
 - Total omzet/pendapatan kotor bulan berjalan ({$monthName}): Rp " . number_format($monthlyRevenue, 0, ',', '.') . "
@@ -523,7 +523,7 @@ Jawablah pertanyaan tersebut secara solutif, ramah, profesional, dan ringkas dal
      */
     public function askGeminiToBeautify(string $localAnswer, string $question, string $apiKey): string
     {
-        $prompt = "Anda adalah asisten AI bisnis pintar bernama TechneFest. Tugas Anda adalah mempercantik teks jawaban bisnis agar terdengar lebih luwes, ramah, dan profesional untuk pemilik toko UMKM dalam Bahasa Indonesia.
+        $prompt = "Anda adalah asisten AI bisnis pintar bernama Umora. Tugas Anda adalah mempercantik teks jawaban bisnis agar terdengar lebih luwes, ramah, dan profesional untuk pemilik toko UMKM dalam Bahasa Indonesia.
 
 Pertanyaan dari Pemilik Toko: \"{$question}\"
 Jawaban Data Mentah: \"{$localAnswer}\"

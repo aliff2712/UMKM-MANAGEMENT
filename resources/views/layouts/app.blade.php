@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') - TechneFest UMKM</title>
+    <title>@yield('title', 'Dashboard') - Umora UMKM</title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,7 +33,7 @@
                 <div class="brand-icon">
                     <i data-lucide="store"></i>
                 </div>
-                <span class="brand-text">TechneFest</span>
+                <span class="brand-text">Umora</span>
             </div>
             
             <nav class="sidebar-menu">

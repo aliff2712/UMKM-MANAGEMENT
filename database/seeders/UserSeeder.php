@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
         
         if (!$outlet) {
             $outlet = Outlet::create([
-                'name'       => 'Outlet TechneFest Pusat',
+                'name'       => 'Outlet Umora Pusat',
                 'address'    => 'Jl. Digital Raya No. 101, Jakarta',
                 'phone'      => '081234567890',
                 'created_at' => now(),
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
         $primaryUsers = [
             [
                 'outlet_id'  => $outletId,
-                'name'       => 'Owner TechneFest',
+                'name'       => 'Owner Umora',
                 'email'      => 'owner@toko.com',
                 'password'   => Hash::make('password'),
                 'role'       => 'owner',
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'outlet_id'  => $outletId,
-                'name'       => 'Admin TechneFest',
+                'name'       => 'Admin Umora',
                 'email'      => 'admin@toko.com',
                 'password'   => Hash::make('password'),
                 'role'       => 'admin',
@@ -54,7 +54,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'outlet_id'  => $outletId,
-                'name'       => 'Kasir TechneFest',
+                'name'       => 'Kasir Umora',
                 'email'      => 'kasir@toko.com',
                 'password'   => Hash::make('password'),
                 'role'       => 'kasir',

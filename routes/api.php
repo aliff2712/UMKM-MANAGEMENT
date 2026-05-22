@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes — TechneFest UMKM Management Platform
+| API Routes — Umora UMKM Management Platform
 |--------------------------------------------------------------------------
 | Prefix  : /api/v1 (diset di RouteServiceProvider atau bootstrap/app.php)
 | Auth    : auth:sanctum untuk semua route kecuali /login
@@ -53,7 +53,7 @@ Route::prefix('v1')->group(function () {
             ], 403);
         }
 
-        $token = $user->createToken('technefest_' . $user->role)->plainTextToken;
+        $token = $user->createToken('umora_' . $user->role)->plainTextToken;
 
         return response()->json([
             'success' => true,

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Asisten Pintar AI')
-@section('page_title', 'Asisten Pintar TechneFest')
+@section('page_title', 'Asisten Pintar Umora')
 
 @section('content')
 
@@ -32,7 +32,7 @@
             <div class="ai-ava"><i data-lucide="bot"></i></div>
             <div class="ai-col">
                 <div class="ai-bubble ai-bot">
-                    Halo! Saya adalah asisten virtual <strong>TechneFest</strong>. Saya dapat menganalisis data penjualan, tingkat stok produk, dan laporan keuangan outlet Anda secara real-time.<br><br>
+                    Halo! Saya adalah asisten virtual <strong>Umora</strong>. Saya dapat menganalisis data penjualan, tingkat stok produk, dan laporan keuangan outlet Anda secara real-time.<br><br>
                     Silakan ajukan pertanyaan di bawah atau klik kartu rekomendasi!
                 </div>
                 <span class="ai-ts">Baru saja</span>

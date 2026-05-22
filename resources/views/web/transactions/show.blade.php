@@ -114,7 +114,7 @@
         <!-- Footer -->
         <div style="text-align: center; font-size: 0.75rem; margin-top: 16px;">
             <div>*** TERIMA KASIH ***</div>
-            <div style="margin-top: 4px; font-size: 0.65rem;">Powered by TechneFest UMKM</div>
+            <div style="margin-top: 4px; font-size: 0.65rem;">Powered by Umora UMKM</div>
         </div>
     </div>
 @endsection

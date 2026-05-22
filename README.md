@@ -1,4 +1,4 @@
-# 🏪 TechneFest — Platform Manajemen UMKM
+# 🏪 Umora — Platform Manajemen UMKM
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" />
@@ -234,7 +234,7 @@ Edit file `.env`:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=technefest_umkm
+DB_DATABASE=umora_umkm
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -272,12 +272,12 @@ Aplikasi berjalan di: `http://localhost:8000`
 File `.env` penting:
 
 ```env
-APP_NAME="TechneFest"
+APP_NAME="Umora"
 APP_URL=http://localhost:8000
 
 # Database
 DB_CONNECTION=mysql
-DB_DATABASE=technefest_umkm
+DB_DATABASE=umora_umkm
 
 # Sanctum (untuk API token)
 SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1

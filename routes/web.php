@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes — TechneFest UMKM (Blade Templates)
+| Web Routes — Umora UMKM (Blade Templates)
 |--------------------------------------------------------------------------
 | Semua route di sini dilindungi middleware 'auth' (session-based).
 | CSRF protection otomatis aktif via middleware 'web'.
